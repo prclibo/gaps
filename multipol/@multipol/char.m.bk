@@ -1,0 +1,134 @@
+function s = char(mp,lex_vars,prec)
+% MULTIPOL/CHAR
+% Convert polynomial expression to readable string representation
+if nargin<2
+    lex_vars = true;
+end
+if nargin<3
+    prec = [];
+end
+
+s = cell(size(mp));
+mp = eqsize(mp);
+
+% If few variables and xyzw==true, use x, y, z, w instead of numbered x's.
+% names = {'x','y','z','w'};
+for k = 1:numel(mp)    
+    n = nvars(mp(1));
+%     wvars = string(mp(k).vars);
+%     wvars = repmat(wvars(:), 1, nterms(mp(k)));
+%     wvars0 = wvars;
+%     wdegs = string(mp(k).monomials);
+%     wmonos = strcat(wvars, '^', wdegs);
+%     wmonos(mp(k).monomials == 0) = "";
+%     mask = mp(k).monomials == 1;
+%     wmonos(mask) = wvars0(mask);
+%     wmonos = join(wmonos, '*', 1);
+%     wmonos = arrayfun(@(x) regexprep(x, '*{2,}', '*'), wmonos);
+%     wmonos = arrayfun(@(x) regexprep(x, '^\**+(.*?)\**+$', '$1'), wmonos);
+%     
+% 
+%     coefs = string(mp(k).coeffs);
+%     terms = strcat(coefs, '*', wmonos);
+%     line = strjoin(terms, '+');
+%     line = strrep(line, '+-', '-');
+%     line = regexprep(line, '([+-])', ' $1 ');
+%     s{k} = char(line);
+    if lex_vars
+        unk_vars = mp(k).vars(:);
+    else
+        unk_vars = sym('x%d', [n, 1]);
+    end
+    
+    monos = string(prod(unk_vars .^ int8(mp(k).monomials)));
+    one_mask = logical(mp(k).coeffs == 1);
+    coefs = string(mp(k).coeffs);
+    coefs(one_mask) = "";
+    mul_symb = repmat("*", size(coefs));
+    mul_symb(one_mask) = "";
+    terms = strcat(coefs, mul_symb, monos);
+    line = strjoin(terms, ' + ');
+    s{k} = char(line);
+end
+
+if numel(s) == 1, s = s{1}; end
+
+% for k=1:numel(mp)
+%     names = cellstr(string(vars(mp(k))));
+% 
+%     c = '';
+%     t = term2str(mp(k),1);
+%     if (isreal(mp(k).coeffs(1)) && mp(k).coeffs(1)<0), c = '-'; end
+%     c = [c t];
+%     for i=2:nterms(mp(k))
+%         t = term2str(mp(k),i);
+%         pm = ' + ';
+%         if isreal(mp(k).coeffs(i)) && mp(k).coeffs(i)<0
+%             pm = ' - ';
+%         end
+%         c = [c pm term2str(mp(k),i)];
+%     end
+%     
+%     s{k} = c;
+% end
+% 
+% if numel(mp)==1
+%     s = s{1};
+% end
+% 
+%     function s = n2s(c,prec)
+%         if isnumeric(c)
+%             if isreal(c)
+%                 % the things we do for backwards compatability...
+%                 c = abs(c);
+%             end
+%             if ~isempty(prec)
+%                 s = num2str(c,prec);
+%             else
+%                 s = num2str(c);
+%             end
+%             if ~isreal(c)
+%                 s = ['(' s ')'];
+%             end
+%         else
+%             s = char(c);
+%         end
+%         
+%     end
+% 
+%     function c = term2str(p,t)
+%         c = '';
+%         jj = find(p.monomials(:,t)~=0)';
+%         unit_coeff = p.coeffs(t) == 1 || p.coeffs(t) == -1;
+%         if ~(unit_coeff) || isempty(jj)
+%             c = [c n2s(p.coeffs(t),prec)];
+%         end
+%         if ~isempty(jj) && ~unit_coeff
+%             c = [c '*'];
+%         end
+%         for j=1:numel(jj)
+%             if j>1
+%                 c = [c '*'];
+%             end
+%             if repl_vars % && n<=4
+%                 name = names{jj(j)};
+%             else
+%                 name = sprintf('x%u',jj(j));
+%             end
+%             if p.monomials(jj(j),t)~=1
+%                 c = [c sprintf('%s^%d',name,p.monomials(jj(j),t))];
+%             else
+%                 c = [c sprintf('%s',name)];
+%             end
+%         end
+%     end
+% 
+% end
+% 
+% 
+% 
+% 
+
+
+
+
