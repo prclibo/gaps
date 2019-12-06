@@ -3,11 +3,11 @@ opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
 % opt.use_sym = false;
 % opt.find_sym = false;
 % opt.fast_monomial_extraction = false;
-opt.remove_zero_sol = true;
+% opt.remove_zero_sol = true;
 opt.optimize_coefficients = true;
 
 prob_fn = @prob_pc_relpose_4pra_p6d;
-prob_fn = @prob_pc_relpose_5p_nulle_ne;
+% prob_fn = @prob_pc_relpose_5p_nulle_ne;
 [solv, opt] = generate_solver(prob_fn, opt);
 
 addpath solvers

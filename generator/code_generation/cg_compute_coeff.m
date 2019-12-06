@@ -21,12 +21,7 @@ else
     expd_str = arrayfun(@char, coeff_eqs, 'UniformOutput', false);
     idx_str = strseq('', 1:numel(coeff_eqs));
     coeff_str = strcat('coeffs(', idx_str(:), ') =\t', expd_str(:), ';\n');
-    
-    for kk = nvars(coeff_eqs(1)):-1:1
-        var_name = sprintf('x%d',kk);
-        rep_name = sprintf('data(%d)',kk);
-        coeff_str = strrep(coeff_str,var_name,rep_name);
-    end
+
     str = [str coeff_str];
 end
 
