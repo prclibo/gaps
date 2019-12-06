@@ -62,7 +62,7 @@ for iter = 1:iters
     
     result.all_res = [result.all_res min_d];
 end
-fprintf('\n');
+fprintf('\nwith %d failures', result.failures);
 
 result.res_mean = mean(log10(result.all_res));
 result.res_median = median(log10(result.all_res));

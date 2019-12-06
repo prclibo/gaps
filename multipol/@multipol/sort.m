@@ -36,5 +36,4 @@ for i=1:numel(p)
 	else
 		p(i).coeffs = sum(p(i).coeffs(:));
 	end
-	p(i).str = string(p(i));
 end

@@ -6,5 +6,4 @@ function p1 = uminus(p1)
 
 for i=1:numel(p1)
 	p1(i).coeffs = -p1(i).coeffs;
-    p1(i).str = string(p1(i));
 end

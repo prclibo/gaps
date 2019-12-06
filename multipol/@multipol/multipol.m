@@ -4,7 +4,6 @@ if nargin==0
 	s.coeffs = 0;
 	s.monomials = 0;
     s.vars = sym([]);
-    s.str = "";
     s = class(s,'multipol');
 else
     mono_degs = [];
@@ -25,14 +24,10 @@ else
             s.coeffs = x.coeffs;
             s.monomials = x.monomials;
             s.vars = x.vars;
-            s.str = x.str;
             if ~isempty(vars)
                 s.vars = vars;
             end
             s = class(s,'multipol');
-            if ~isempty(vars)
-                s.str = x.str;
-            end
         else
             % Should do test. What is the scenario for this?
             for i=numel(x):-1:1
@@ -75,7 +70,6 @@ else
             s(i).coeffs = coefs(nz_mask);
             s(i).monomials = mono_degs(:, nz_mask);
             s(i).vars = vars;
-            s(i).str = string(s(i));
         end
     end
 end

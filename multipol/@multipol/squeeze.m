@@ -20,12 +20,10 @@ for i=1:numel(p)
 	zero = find(abs(p(i).coeffs)<tol);
 	p(i).coeffs(zero) = [];
 	p(i).monomials(:,zero) = [];
-    p(i).str = string(p(i));
 	
 	if isempty(p(i).coeffs)
 		p(i).coeffs = 0;
 		p(i).monomials = zeros(size(p(i).monomials,1),1);
-        p(i).str = string(p(i));
 	end
 	
 end
