@@ -51,7 +51,7 @@ solv.n_sol = length(solv.basis);
 
 fprintf('Problem has (at most) %d solutions.\n', solv.n_sol);
 fprintf('Quotient ring basis (degree = %d)\n', length(solv.basis));
-fprintf('\tB = [ %s ]\n', strjoin(str(solv.basis)));
+fprintf('\tB = [ %s ]\n', strjoin(string(solv.basis)));
 
 %% Remove zero solution
 if opt.remove_zero_sol && ...
@@ -101,10 +101,10 @@ if ~isempty(opt.extra_reducible)
 end
 
 % remove basis elements
-solv.reducible = setdiff(solv.reducible, solv.basis);
+solv.reducible = mono_setdiff(solv.reducible, solv.basis);
 
 fprintf('Monomials to reduce: (%d monomials)\n',length(solv.reducible));
-fprintf('\tR = [ %s ]\n', strjoin(str(solv.reducible), ', '));
+fprintf('\tR = [ %s ]\n', strjoin(string(solv.reducible), ', '));
 
 %% Generate monomial expansion
 

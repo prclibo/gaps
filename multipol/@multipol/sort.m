@@ -36,5 +36,4 @@ for i=1:numel(p)
 	else
 		p.coeffs = sum(p.coeffs(:));
 	end
-	
 end

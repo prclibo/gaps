@@ -63,7 +63,7 @@ function template = initialize_template(action, basis, reducible, all_inc, opt)
 
     % which reducibles do we need
     inc = all_inc;
-    inc(find_mon_indices(reducible,setdiff(action*basis,basis))) = 1;
+    inc(find_mon_indices(reducible,mono_setdiff(action*basis,basis))) = 1;
     
 
 
@@ -75,7 +75,7 @@ function template = initialize_template(action, basis, reducible, all_inc, opt)
     template.action = action;
     template.basis = basis;
     template.reducible = reducible(inc);
-    template.desc = strrep(strrep(sprintf('action_%s',str(action)),'^','__'),'*','');
+    template.desc = strrep(strrep(sprintf('action_%s',string(action)),'^','__'),'*','');
     template.extraction_scheme = [];
     template.norm_scheme = [];
 
