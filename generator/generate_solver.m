@@ -9,9 +9,11 @@ solv.n_vars = numel(prob.unk_vars);
 solv.vars = prob.unk_vars;
 solv.eqs_zp = cell(1, opt.integer_expansions);
 solv.unk_zp = cell(1, opt.integer_expansions);
+fprintf('Sampling Zp instances\n'); tic;
 for i = 1:numel(opt.integer_expansions)
     [solv.eqs_zp{i}, solv.unk_zp{i}] = prob.rand_eq_zp(opt.prime_field);
 end
+toc; fprintf('-- Sampled.\n'); tic;
 
 solv.n_eqs = numel(prob.eqs);
 
@@ -26,11 +28,11 @@ fprintf('generate_solver'); % (%s, %d equations in %d variables)\n',solv.name,so
 
 if opt.find_sym
     % TODO Transplant
-    fprintf('Checking for symmetry. max_p = %d\n',opt.sym_max_p);
+    fprintf('Checking for symmetry. max_p = %d\n',opt.sym_max_p); tic;
     
     [opt.sym_cc,opt.sym_pp] = find_symmetries(solv.eqs_zp{1},opt.sym_max_p);
     
-    fprintf('Found %d symmetries.\n',length(opt.sym_pp));
+    toc; fprintf('-- Found %d symmetries.\n',length(opt.sym_pp));
     for k = 1:length(opt.sym_pp)
         fprintf('\tc = [ ');
         fprintf('%d ',opt.sym_cc(:,k));
@@ -89,6 +91,7 @@ end
 
 %% Select monomials to reduce
 
+tic
 solv.reducible = [];
 for k = 1:length(solv.actions)
     solv.reducible = [solv.reducible solv.actions(k)*solv.basis];
@@ -99,7 +102,7 @@ end
 if ~isempty(opt.extra_reducible)
     solv.reducible = unique([solv.reducible opt.extra_reducible]);
 end
-
+toc
 % remove basis elements
 solv.reducible = setdiff(solv.reducible, solv.basis);
 

@@ -85,23 +85,56 @@ end
 function s = from_sym(eqs, vars)
 
 s = repmat(multipol, size(eqs));
+var_str = evalc('disp(vars)');
 for i = 1:numel(eqs)
     eq = eqs(i);
-    pl = sym(mupadmex('poly2list', char(eq), evalc('disp(vars)')));
+    % Same speed the below.
+    % pl = mupadmex('poly2list', char(eq), var_str);
+    pl = feval(symengine, 'poly2list', eq, var_str);
     nterms = numel(pl);
     m = zeros(numel(vars),nterms);
-    coeffs = sym(zeros(1,nterms));
+    cidxs = zeros(1,nterms);
+    coefs = sym(zeros(1,nterms));
+    pl = feval(symengine, 'matrix', pl);
+    coefs = pl(:, 1).';
     for j=1:nterms
-        d = pl(j);
-        coeffs(j) = d(1);
-        m(:,j) = d(2)';
+        m(:,j) = pl(j, 2);
     end
-    s(i) = multipol(coeffs,m, 'vars', vars);
+    s(i) = multipol(coefs, m, 'vars', vars);
 end
 
+% s = repmat(multipol, size(eqs));
+% var_str = evalc('disp(vars)');
+% for i = 1:numel(eqs)
+%     eq = eqs(i);
+%     
+%     [coefs, T] = coeffs(eq, vars);
+%     nterms = numel(T);
+%     m = zeros(numel(vars),nterms);
+%     for j = 1:nterms
+%         pl = mupadmex('poly2list', char(T(j)), var_str);
+%         pl = pl(1);
+%         m(:, j) = pl(2);
+%     end
+%     
+%     s(i) = multipol(coefs,m, 'vars', vars);
+% end
 
-
-
-
+% s = repmat(multipol, size(eqs));
+% var_str = evalc('disp(vars)');
+% for i = 1:numel(eqs)
+%     eq = eqs(i);
+%     
+%     [coefs, T] = coeffs(eq, vars);
+%     nterms = numel(T);
+%     m = zeros(numel(vars),nterms);
+%     for j = 1:nterms
+% %         pl = mupadmex('poly2list', char(T(j)), var_str);
+%         pl = feval(symengine, 'degreevec', T(j), var_str);
+%         m(:, j) = pl;
+%     end
+%     
+%     s(i) = multipol(coefs,m, 'vars', vars);
+% end
 
 end

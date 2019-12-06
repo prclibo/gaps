@@ -4,6 +4,7 @@ prob = solv.prob;
 in_par_str = strjoin(fieldnames(prob.in_subs), ', ');
 str = sprintf('function coeffs = compute_coeffs(%s)\n', in_par_str);
 
+% Unpack input parameters
 par_names = fieldnames(prob.in_subs);
 for i = 1:numel(par_names)
     par_name = par_names{i};
@@ -12,6 +13,14 @@ for i = 1:numel(par_names)
         line = sprintf('%s = %s(%d);\n', char(subs_(j)), par_name, j);
         str = [str, line];
     end
+end
+
+par_names = fieldnames(prob.abbr_subs);
+for i = 1:numel(par_names)
+    par_name = par_names{i};
+    subs_ = prob.abbr_subs.(par_name);
+    line = sprintf('%s = %s;\n', par_name, char(subs_));
+    str = [str, line];
 end
 
 coeff_eqs = solv.coefficients.coeff_eqs;

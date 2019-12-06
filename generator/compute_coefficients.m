@@ -22,7 +22,9 @@ else
     ind_eqs = [];
     coeff_zps = cell(1, numel(eqs_zp));
     for k = 1:solv.n_eqs
-        [coeff_eq, mdegs] = coeff2mat(coeffs(eqs(k)), monomials(eqs(k)));
+%         [coeff_eq, mdegs] = coeff2mat(coeffs(eqs(k)), monomials(eqs(k)));
+        coeff_eq = coeffs(eqs(k));
+        mdegs = monomials(eqs(k));
         for i = 1:numel(eqs_zp)
             coeff_zp = collect_coeffs(eqs_zp{i}(k), mdegs);
             coeff_zps{i} = [coeff_zps{i}, coeff_zp];
