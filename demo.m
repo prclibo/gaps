@@ -6,7 +6,8 @@ opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
 % opt.remove_zero_sol = true;
 opt.optimize_coefficients = true;
 opt.remove_extra_columns = false;
-opt.find_upper_trianglar = true;
+% opt.find_upper_trianglar = true;
+opt.sparse_template = true;
 
 prob_fn = @prob_pc_relpose_4pra_p6d;
 % prob_fn = @prob_pc_relpose_5p_nulle_ne;
