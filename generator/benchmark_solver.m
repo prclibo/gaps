@@ -28,14 +28,14 @@ for iter = 1:iters
     out_cell = cell(size(fieldnames(out_rl)));
     in_cell = struct2cell(in_rl);
     
-    try
+%     try
         tic;
         [out_cell{:}] = solv_fun(in_cell{:});
         tt = toc;
-    catch
-        result.failures = result.failures + 1;
-        continue;
-    end
+%     catch
+%         result.failures = result.failures + 1;
+%         continue;
+%     end
 
     result.time_taken(end+1) = tt;    
 
