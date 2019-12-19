@@ -1,4 +1,5 @@
 *.m~
+*.sw[a-z]
 cache
 solvers*
 .DS_Store
