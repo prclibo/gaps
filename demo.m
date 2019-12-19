@@ -5,11 +5,16 @@ opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
 % opt.fast_monomial_extraction = false;
 % opt.remove_zero_sol = true;
 opt.optimize_coefficients = true;
+opt.remove_extra_columns = false;
+opt.find_upper_trianglar = true;
+% opt.sparse_template = true;
+opt.cg_language = 'cpp';
+opt.cg_eigen_dir = '/usr/local/include/eigen3';
 
 prob_fn = @prob_pc_relpose_4pra_p6d;
 prob_fn = @prob_pc_relpose_5p_nulle_ne;
 [solv, opt] = generate_solver(prob_fn, opt);
-
+return;
 addpath solvers
 
 solv_fun = str2func(['solver_' solv.name]);

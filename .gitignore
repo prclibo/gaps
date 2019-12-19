@@ -1,4 +1,4 @@
 *.m~
 cache
-solvers
+solvers*
 .DS_Store

@@ -173,6 +173,10 @@ default_opt.cg_max_stack_alloc_size = 100;
 default_opt.saturate_mon = [];
 default_opt.generalized_eigenvalue_solver = 0;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% New
+default_opt.find_upper_trianglar = false;
+
 % merge into opt
 fields = fieldnames(default_opt);
 for k = 1:length(fields)
@@ -180,5 +184,6 @@ for k = 1:length(fields)
         opt = setfield(opt,fields{k},getfield(default_opt,fields{k}));
     end
 end
+
 
 opt = orderfields(opt);

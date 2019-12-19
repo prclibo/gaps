@@ -2,6 +2,10 @@ function [ template ] = remove_extra_columns( template, solv )
 
 fprintf('Removing extra columns ... ');
 
+if opt.find_upper_trianglar
+    error('Not handled');
+end
+
 opt = solv.opt;
 
 % faster than sym and will be unlikely to overflow in rref.

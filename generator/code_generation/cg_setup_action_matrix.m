@@ -21,7 +21,8 @@ if template.C_sz(1) == template.C_sz(2)-length(template.basis)
     str = [str sprintf('RR = [-C1(end-%d:end,:);eye(%d)];\n',length(template.reducible)-1,length(template.basis))];
 else
     % solve in least squares sense (Non-square template)
-    b = zeros(template.C_sz(2)-length(template.basis),length(template.reducible));
+    b = zeros(size(template.cind_blk{2, 2}, 2), numel(template.reducible));
+%     b = zeros(template.C_sz(2)-length(template.basis),length(template.reducible));
     b(end-length(template.reducible)+1:end,:) = -eye(length(template.reducible));
     b_ind = find(b);
     b_sz = size(b);
