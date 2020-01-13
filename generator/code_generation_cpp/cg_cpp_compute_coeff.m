@@ -19,7 +19,16 @@ for i = 1:numel(par_names)
     end
 end
 
+abbr_subs = prob.abbr_subs;
+var_names = fieldnames(abbr_subs);
+for var_name = var_names(:)'
+    cline = feval(symengine, 'generate::C', sym(var_name{1}) == abbr_subs.(var_name{1}));
+    cline = sprintf(['double const ', char(cline)]);
+    str = [str, cline];
+end
+
 coeff_eqs = solv.coefficients.coeff_eqs;
+
 if opt.optimize_coefficients
     str = [str sprintf('%sVectorXd coeffs(%d);\n',opt.cg_indentation,length(coeff_eqs))];
     str = [str cg_cpp_optimize_coefficients(coeff_eqs)];

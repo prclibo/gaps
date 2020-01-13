@@ -79,7 +79,7 @@ end
 function s = from_sym(eqs, vars)
 
 s = repmat(multipol, size(eqs));
-var_str = evalc('disp(vars)');
+var_str = evalc('disp(vars(:).'')');
 for i = 1:numel(eqs)
     eq = eqs(i);
     % Same speed the below.

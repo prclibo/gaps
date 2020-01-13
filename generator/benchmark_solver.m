@@ -18,9 +18,9 @@ result.time_taken = [];
 % TODO make better choices in design (and life)
 prob = solv.prob;
 
-fprintf('Solving sample instances for           ');
+% fprintf('Solving sample instances for           ');
 for iter = 1:iters
-    fprintf('\b\b\b\b\b\b\b\b%8d', iter);
+%     fprintf('\b\b\b\b\b\b\b\b%8d', iter);
 
     rng(iter);
     [in_rl, out_rl] = prob.rand_par_rl();

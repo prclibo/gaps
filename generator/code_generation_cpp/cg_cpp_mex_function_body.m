@@ -25,6 +25,7 @@ in_decl = cell(1, numel(in_name));
 in_par = cell(1, numel(in_name));
 for i = 1:numel(in_name)
     subs_ = prob.in_subs.(in_name{i});
+    subs_ = reshape(subs_, size(subs_, 1), []);
     if numel(subs_) == 1
         in_decl{i} = sprintf('double %s = mxGetPr(prhs[%d])[0];\n', in_name{i}, i - 1);
     else

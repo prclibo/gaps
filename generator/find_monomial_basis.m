@@ -43,6 +43,7 @@ assert(code == 0, 'M2 return code is %d!', code);
 
 % read result
 basis = read_m2_matrix(fname_b, vars(eqs_zp(1)));
+assert(~isempty(basis), 'Didnot find basis! Check if the ideal is zero-dimensional');
 
 if exist(fname,'file'), delete(fname); end
 % if exist(fname_b,'file'), delete(fname_b); end

@@ -88,13 +88,15 @@ elseif strcmp(opt.eigen_solver,'sturm_dani')
     code_template_str = regexprep(code_template_str,'#if\s*\$\(use_reduced_eigenvector_solver\)\s*\n(.*?)\n#endif','');
 
     % Compute eigenvectors using danilevsky transform
-    replacements{end+1} = {'code_extract_solutions',         cg_cpp_extract_solutions_sturm_dani(solv,template,opt)};
+%     replacements{end+1} = {'code_extract_solutions',         cg_cpp_extract_solutions_sturm_dani(solv,template,opt)};
+    replacements{end+1} = {'code_extract_solutions',         cg_cpp_extract_solutions(solv,template,opt)};
 else
     % Compute eigenvectors using standard approach
     code_template_str = regexprep(code_template_str,'#if\s*\$\(use_reduced_eigenvector_solver\)\s*\n(.*?)\n#endif','');
     replacements{end+1} = {'code_normalize_eigenvectors',    cg_cpp_normalize_eigenvectors(solv,template,opt)};
     replacements{end+1} = {'code_extract_solutions',         cg_cpp_extract_solutions(solv,template,opt)};
 end
+replacements{end+1} = {'code_pack_outputs',                        cg_cpp_pack_outputs(solv, template, opt)};
 
 % Misc things
 replacements{end+1} = {'solv_name',                 solv_name};
@@ -185,9 +187,9 @@ if opt.write_to_file
     if opt.cg_compile_mex
         
         if strcmp(opt.eigen_solver,'sturm') || strcmp(opt.eigen_solver,'sturm_dani')
-            mex(['-I"' opt.cg_eigen_dir '"'],['-I"' template_dir '"'],'-O',fname,'-outdir','solvers_cpp')
+            mex(['-I"' opt.cg_eigen_dir '"'],['-I"' template_dir '"'],'-O', '-R2018a', fname,'-outdir','solvers_cpp')
         else
-            mex(['-I"' opt.cg_eigen_dir '"'],'-O',fname,'-outdir','solvers_cpp')
+            mex(['-I"' opt.cg_eigen_dir '"'],'-O', '-R2018a', fname,'-outdir','solvers_cpp')
         end
     end
     

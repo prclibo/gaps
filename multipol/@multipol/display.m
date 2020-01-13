@@ -34,6 +34,6 @@ else
 	disp(sp);
 	disp([inputname(1),' = '])
 	disp(sp);
-	disp(char(s));
+	disp(string(s));
 	disp(sp);
 end

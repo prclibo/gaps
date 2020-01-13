@@ -1,26 +1,16 @@
 opt = default_options();
 opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
-% opt.use_sym = false;
-% opt.find_sym = false;
-% opt.fast_monomial_extraction = false;
-% opt.remove_zero_sol = true;
 opt.optimize_coefficients = true;
 opt.remove_extra_columns = false;
 opt.find_upper_trianglar = true;
-% opt.sparse_template = true;
-opt.cg_language = 'cpp';
-opt.eigen_solver = 'sturm_dani';
-opt.eigen_solver = 'sturm';
+% opt.cg_language = 'cpp';
+% opt.eigen_solver = 'sturm';
 opt.cg_eigen_dir = '/usr/local/include/eigen3';
 
-% opt.find_upper_trianglar = false;
-
-prob_fn = @prob_pc_relpose_4pra_p6d;
-% prob_fn = @prob_pc_relpose_5p_nulle_ne;
+prob_fn = @prob_pc_relpose_5p_nulle_ne;
 [solv, opt] = generate_solver(prob_fn, opt);
-% return;
-addpath solvers
 
+addpath solvers
 solv_fun = str2func(['solver_' solv.name]);
 stats = benchmark_solver(solv_fun,solv,500);
 

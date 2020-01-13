@@ -22,7 +22,7 @@ classdef problem
             if ~isempty(matches)
                 error('Found reserved symbols \<C\d+\>. Avoid using this!');
             end
-            obj = obj.gen_coeff_subs();
+%             obj = obj.gen_coeff_subs();
             
             [obj.in_subs, obj.out_subs] = obj.gen_par_subs();
         end
@@ -62,6 +62,21 @@ classdef problem
     end
     methods (Static)
         function var_subs = unpack_pars(par_subs, val_subs)
+        % unpack_pars par_subs stores sym variables as fields like:
+        %   par_subs.a = [a1, a2, a3];
+        %   par_subs.b = [b1, b2; b3, b4];
+        %   val_subs stores values (numeric or sym) as fields like:
+        %   val_subs.a = [1, 2, 3];
+        %   val_subs.b = [4, 5, 6, 7];
+        %   var_subs will store values as unpacked sym variable names
+        %   like:
+        %   var_subs.a1 = 1;
+        %   var_subs.a2 = 2;
+        %   var_subs.a3 = 3;
+        %   var_subs.b1 = 4;
+        %   var_subs.b2 = 5;
+        %   var_subs.b3 = 6;
+        %   var_subs.b4 = 7;
             function y = expd_cat_fields(x)
                 y = struct2cell(x);
                 y = cellfun(@(z) z(:), y, 'UniformOutput', false);

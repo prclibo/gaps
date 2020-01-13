@@ -1,7 +1,10 @@
 #include <iostream>
 #include <vector>
+#include <numeric>
 #include <Eigen/Dense>
 #include "mex.h"
+#include "matrix.h"
+
 #if $(use_sparse_template)
 #include <Eigen/Sparse>
 #endif
@@ -12,21 +15,22 @@
 #endif
 #if $(use_sturm_dani_eigensolver)
 #define MAX_DEG  $(num_basis)
-#include "sturm.h"
+// #include "sturm.h"
+#define DEG  $(num_basis)
+#include "sturm_mart.h"
 #include "charpoly.h"
 #endif
 
 using namespace Eigen;
 
 #if $(use_reduced_eigenvector_solver)
-void fast_eigenvector_solver(double * eigv, int neig, Eigen::Matrix<double,$(num_basis),$(num_basis)> &AM, Matrix<std::complex<double>,$(num_vars),$(num_basis)> &sols);
+void fast_eigenvector_solver(double * eigv, int neig, Eigen::Matrix<double,$(num_basis),$(num_basis)> &AM, MatrixXcd &sols);
 #endif
 
 void solver_$(solv_name)($(function_param_declaration))
-
-// MatrixXcd solver_$(solv_name)(const VectorXd& data)
 {
     // Compute coefficients
+    
 $(code_compute_coefficients)
 
     // Setup elimination template
@@ -47,7 +51,7 @@ $(code_setup_template)
         AM.row(i) = RR.row(AM_ind[i]);
     }
 
-    Matrix<std::complex<double>, $(num_vars), $(num_basis)> sols;
+    MatrixXcd sols($(num_vars), $(num_basis));
     sols.setZero();
 
     // Solve eigenvalue problem
@@ -55,8 +59,9 @@ $(code_setup_template)
     EigenSolver<Matrix<double, $(num_basis), $(num_basis)> > es(AM);
     ArrayXcd D = es.eigenvalues();    
     ArrayXXcd V = es.eigenvectors();
-$(code_normalize_eigenvectors)
-$(code_extract_solutions)
+
+    $(code_normalize_eigenvectors)
+    $(code_extract_solutions)
 #endif
 #if $(use_eigsonly_eigensolver)
 
@@ -83,30 +88,37 @@ $(code_extract_solutions)
 #endif
 
 #if $(use_sturm_dani_eigensolver)
+
     double p[1 + $(num_basis)];
     Matrix<double, $(num_basis), $(num_basis)> T;
     charpoly_danilevsky_piv_T(AM, p, T);
     double roots[$(num_basis)];
     int nroots;
-    find_real_roots_sturm(p, $(num_basis), roots, &nroots, 8, 0);    
+    // find_real_roots_sturm(p, $(num_basis), roots, &nroots, 8, 0);
+    nroots = realRoots(p, roots);
+    sols.resize($(num_vars), nroots);
 
-    Matrix<double, $(num_basis), 1> v;
-    for (int i = 0; i < nroots; i++) {
-        v($(num_basis) - 1) = 1.0;
-        // Compute eigenvector to companion matrix
-        for (int j = $(num_basis) - 2; j >= 0; j--)
-            v(j) = roots[i] * v(j + 1);
-        // Transform to eigenvector of action matrix
-        v = T * v;
-        // TODO: support more fancy extraction schemes 
-$(code_extract_solutions)
+    Eigen::MatrixXd V($(num_basis), nroots);
+    Eigen::Map<Eigen::MatrixXd> D(roots, 1, nroots);
+    V.bottomRows(1).setConstant(1);
+    for (int j = $(num_basis) - 2; j >= 0; j--) {
+        V.row(j) = V.row(j + 1).array() * D.array();
     }
+    V = T * V;
+    Eigen::RowVectorXd row = V.row(0);
+    V.array().rowwise() /= row.array();
+
+    D.transposeInPlace();
+    $(code_extract_solutions)
+
 #endif
+    $(code_pack_outputs)
+
 }
 $(debug_comments)
 
 #if $(use_reduced_eigenvector_solver)
-void fast_eigenvector_solver(double * eigv, int neig, Eigen::Matrix<double,$(num_basis),$(num_basis)> &AM, Matrix<std::complex<double>,$(num_vars),$(num_basis)> &sols) {
+    void fast_eigenvector_solver(double * eigv, int neig, Eigen::Matrix<double,$(num_basis),$(num_basis)> &AM, MatrixXcd &sols) {
     static const int ind[] = { $(ind_non_trivial) };    
     // Truncated action matrix containing non-trivial rows
     Matrix<double, $(length_ind_non_trivial), $(num_basis)> AMs;
@@ -135,14 +147,15 @@ mxArray* convertToMatlabCell(std::vector<Eigen::MatrixXcd> const& sols) {
     for (int i = 0; i < sols.size(); ++i) {
         Eigen::MatrixXcd sol = sols.at(i);
         mxArray* mat = mxCreateDoubleMatrix(sol.rows(), sol.cols(), mxCOMPLEX);
-        double* mat_r = mxGetPr(mat);
-        double* mat_i = mxGetPi(mat);
-        for (int r = 0; r < sol.rows(); ++r) {
-            for (int c = 0; c < sol.cols(); ++c) {
-                mat_r[c * sol.rows() + r] = sol(r, c).real();
-                mat_i[c * sol.rows() + r] = sol(r, c).imag();
-            }
-        }
+        memcpy(mxGetComplexDoubles(mat), sol.data(), sizeof(mxComplexDouble) * sol.size());
+        // double* mat_r = mxGetPr(mat);
+        // double* mat_i = mxGetPi(mat);
+        // for (int r = 0; r < sol.rows(); ++r) {
+        //     for (int c = 0; c < sol.cols(); ++c) {
+        //         mat_r[c * sol.rows() + r] = sol(r, c).real();
+        //         mat_i[c * sol.rows() + r] = sol(r, c).imag();
+        //     }
+        // }
         mxSetCell(cell, i, mat);
     }
     return cell;
@@ -150,6 +163,7 @@ mxArray* convertToMatlabCell(std::vector<Eigen::MatrixXcd> const& sols) {
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
+    std::ios_base::sync_with_stdio(false);
     if (nrhs != $(input_size)) {
         mexErrMsgIdAndTxt("automatic_generator_cvpr:$(solv_name):nrhs", "One input required.");
     }
@@ -159,23 +173,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (!mxIsDouble(prhs[0]) || mxIsComplex(prhs[0])) {
         mexErrMsgIdAndTxt("automatic_generator_cvpr:$(solv_name):notDouble", "Input data must be type double.");
     }
-    // if(mxGetNumberOfElements(prhs[0]) % $(input_size) != 0) {
-    //     mexErrMsgIdAndTxt("automatic_generator_cvpr:$(solv_name):incorrectSize", "Input size must be multiple of $(input_size).");
-    // }
     $(code_mex_function_body)
-
-    // double *input = mxGetPr(prhs[0]);
-    // plhs[0] = mxCreateDoubleMatrix($(num_vars),$(num_basis)*n_instances,mxCOMPLEX);
-    // double* zr = mxGetPr(plhs[0]);
-    // double* zi = mxGetPi(plhs[0]);
-    // for(int k = 0; k < n_instances; k++) {
-    //     const VectorXd data = Map<const VectorXd>(input + k*$(input_size), $(input_size));
-    //     MatrixXcd sols = solver_$(solv_name)($(function_param));
-    //     Index offset = k*sols.size();
-    //     for (Index i = 0; i < sols.size(); i++) {
-    //         zr[i+offset] = sols(i).real();
-    //         zi[i+offset] = sols(i).imag();
-    //     }
-    // }
 }
 

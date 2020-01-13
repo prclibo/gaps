@@ -53,7 +53,11 @@ elseif issparse(p1) % Multiplication with sparse coefficient matrix
 	end
 	
 else % Multiplication between two multipol matrices
-	
+	if isa(p1, 'multipol')
+        vars = p1.vars;
+    else
+        vars = p2.vars;
+    end
 	if numel(p1)==1
 		for i=numel(p2):-1:1
 			p3(i) = p1*p2(i);
@@ -77,6 +81,7 @@ else % Multiplication between two multipol matrices
 		p3(m1,n2) = multipol;
 		for row=1:m1
 			for col=1:n2
+                p3(row,col) = multipol(0, 'vars', vars);
 				for i=1:n1
 					p3(row,col) = p3(row,col)+p1(row,i)*p2(i,col);
 				end
