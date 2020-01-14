@@ -13,7 +13,7 @@ classdef problem
         function obj = problem()
             [obj.eqs_sym, obj.abbr_subs, obj.unk_vars] = obj.gen_eqs_sym();
             obj.eqs = multipol(obj.eqs_sym, 'vars', obj.unk_vars);
-
+            
             all_vars = symvar(obj.eqs_sym);
             obj.kwn_vars = setdiff(all_vars, obj.unk_vars);
             
@@ -22,7 +22,6 @@ classdef problem
             if ~isempty(matches)
                 error('Found reserved symbols \<C\d+\>. Avoid using this!');
             end
-%             obj = obj.gen_coeff_subs();
             
             [obj.in_subs, obj.out_subs] = obj.gen_par_subs();
         end
@@ -54,29 +53,68 @@ classdef problem
             eq_zp = multipol(eq_zp, 'vars', obj.unk_vars);
         end
         
+        %------------------------------------------------------------------
+        function [eqs, unk_vars] = gen_eqs_sym(obj)
+            % gen_eqs_sym Creates polynomials
+            %   [eqs, unk_vars] = gen_eqs_sym(obj) creates sym equation
+            %   polynomials and unknown sym variables. You should instantiate
+            %   this member function for your problem.
+            error(['rand_var_zp is not implemented yet!',...
+                'You should implement this according to your problem']);
+        end
+        %------------------------------------------------------------------
+        function [kwn_zp, unk_zp] = rand_var_zp(obj, p)
+            % rand_var_zp Randomize variables from Zp
+            %   [kwn_zp, unk_zp] = rand_var_zp(obj, p) generates random
+            %   sample on Zp for variables in this problem. You should instantiate
+            %   this member function for your problem. Field names in
+            %   kwn_zp and unk_zp correspond to the known and unknown sym
+            %   variables in the polynomials.
+            
+            error(['rand_var_zp is not implemented yet!',...
+                'You should implement this according to your problem']);
+        end
+        %------------------------------------------------------------------
+        function [in_rl, out_rl] = rand_par_rl(obj)
+            % rand_var_rl Randomize variables from real field
+            %   [kwn_rl, unk_rl] = rand_var_rl(obj) generates random
+            %   sample on real field for variables in this problem. You should instantiate
+            %   this member function for your problem. Field names in
+            %   kwn_rl and unk_rl correspond to the known and unknown sym
+            %   variables in the polynomials.
+            
+            error(['rand_var_rl is not implemented yet!',...
+                'You should implement this according to your problem']);
+            
+        end
     end
     methods (Abstract)
-        [kwn_zp, unk_zp] = rand_var_zp(obj, p)
-        [in_rl, out_rl] = rand_par_rl(obj)
-        [eqs, unk_vars] = gen_eqs_sym(obj)
     end
     methods (Static)
+        %------------------------------------------------------------------
         function var_subs = unpack_pars(par_subs, val_subs)
-        % unpack_pars par_subs stores sym variables as fields like:
-        %   par_subs.a = [a1, a2, a3];
-        %   par_subs.b = [b1, b2; b3, b4];
-        %   val_subs stores values (numeric or sym) as fields like:
-        %   val_subs.a = [1, 2, 3];
-        %   val_subs.b = [4, 5, 6, 7];
-        %   var_subs will store values as unpacked sym variable names
-        %   like:
-        %   var_subs.a1 = 1;
-        %   var_subs.a2 = 2;
-        %   var_subs.a3 = 3;
-        %   var_subs.b1 = 4;
-        %   var_subs.b2 = 5;
-        %   var_subs.b3 = 6;
-        %   var_subs.b4 = 7;
+            % unpack_pars unpacks sym elements as struct fields and sets values
+            %   var_subs = unpack_pars(par_subs, val_subs)
+            %
+            %   Example
+            %   -------
+            %   % par_subs stores sym variables as fields like:
+            %   par_subs.a = [a1, a2, a3];
+            %   par_subs.b = [b1, b2; b3, b4];
+            %
+            %   % val_subs stores values (numeric or sym) as fields like:
+            %   val_subs.a = [1, 2, 3];
+            %   val_subs.b = [4, 5, 6, 7];
+            %
+            %   % var_subs will store values as unpacked sym variable names:
+            %   % var_subs.a1 = 1;
+            %   % var_subs.a2 = 2;
+            %   % var_subs.a3 = 3;
+            %   % var_subs.b1 = 4;
+            %   % var_subs.b2 = 5;
+            %   % var_subs.b3 = 6;
+            %   % var_subs.b4 = 7;
+            %   var_subs = unpack_pars(par_subs, val_subs)
             function y = expd_cat_fields(x)
                 y = struct2cell(x);
                 y = cellfun(@(z) z(:), y, 'UniformOutput', false);
