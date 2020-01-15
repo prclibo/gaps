@@ -20,24 +20,29 @@ Below is a simple example on solving the 5-pt problem:
 
 ```matlab
 classdef prob_pc_relpose_5p_nulle_ne__simple < problem
-    % A simple instance to construct a pinhole camera 5-pt relative pose 
+    % A simple instance to construct a pinhole camera 5-pt relative pose
     % estimation problem solver.
-    properties
-        % Declare known and unknown variables. You can declare as
-        % properties or local function variables according to your
-        % requirements.
-        %
-        % See any papers on 5-pt for details.
-        % Base vectors of the null space of the essential matrix.
-        NE = sym('NE%d%d%d', [4, 3, 3]);
-        % The weights
-        w = sym('w%d', [3, 1]);
-    end
     methods
+        function [in_subs, out_subs] = gen_par_subs(obj)
+            % Each field in `in_subs/out_subs` will become an input/output
+            % argument in the generated solver.
+            %
+            % `in_subs.NE` is a 4x3x3 matrix made up of NEijk symbols. The
+            % created solver will expect input argument NE to be 4x3x3
+            % matrix and fill its element values to NEijk respectively.
+            %
+            % See your favorite 5-pt paper for details.
+            %
+            % Base vectors of the null space of the essential matrix.
+            in_subs.NE = sym('NE%d%d%d', [4, 3, 3]);
+            % The weights
+            out_subs.w = sym('w%d', [3, 1]);
+        end
         function [eqs_sym, abbr_subs, unk_vars] = gen_eqs_sym(obj)
-            NE = permute(obj.NE, [2, 3, 1]);
+            [in_subs, out_subs] = gen_par_subs(obj);
+            NE = permute(in_subs.NE, [2, 3, 1]);
             NE = reshape(NE, 9, 4);
-            E = reshape(NE * [obj.w; 1], 3, 3);
+            E = reshape(NE * [out_subs.w; 1], 3, 3);
             eqs_sym = sym([]);
             
             % Construct polynomial system as symbolics
@@ -52,18 +57,7 @@ classdef prob_pc_relpose_5p_nulle_ne__simple < problem
             abbr_subs = struct([]);
             % unk_vars (Unknown variables) tells which symbols are
             % unknowns. The rest are knowns obviously.
-            unk_vars = obj.w.';
-        end
-        function [in_subs, out_subs] = gen_par_subs(obj)
-            % Each field in `in_subs/out_subs` will become an input/output
-            % argument in the generated solver.
-            %
-            % `in_subs.NE` is a 4x3x3 matrix made up of NEijk symbols. The
-            % created solver will expect input argument NE to be 4x3x3
-            % matrix and fill its element values to NEijk respectively.
-            in_subs.NE = obj.NE;
-            % Similarly for output argument.
-            out_subs.w = obj.w;
+            unk_vars = out_subs.w.';
         end
         function [in_zp, out_zp] = rand_var_zp(obj, p)
             % For 5-pt problem, arbitrary value of NE always corresponds to

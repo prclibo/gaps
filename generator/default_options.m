@@ -155,7 +155,7 @@ default_opt.max_str_len = 50;
 default_opt.fast_monomial_extraction = 1;
 
 % Try to remove redudant columns from the template
-default_opt.remove_extra_columns = 1;
+default_opt.remove_extra_columns = false;
 
 % if we should also try to remove some redundant rows
 % (only happens if remove_extra_columns = 1)
