@@ -11,7 +11,7 @@ solv.eqs_zp = cell(1, opt.integer_expansions);
 solv.unk_zp = cell(1, opt.integer_expansions);
 fprintf('Sampling Zp instances\n'); tic;
 for i = 1:numel(opt.integer_expansions)
-    [solv.eqs_zp{i}, solv.unk_zp{i}] = prob.rand_eq_zp(opt.prime_field);
+    solv.eqs_zp{i} = prob.rand_eq_zp(opt.prime_field);
 end
 toc; fprintf('-- Sampled.\n'); tic;
 

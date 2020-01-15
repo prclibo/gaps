@@ -3,14 +3,17 @@ opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
 opt.optimize_coefficients = true;
 opt.remove_extra_columns = false;
 opt.find_upper_trianglar = true;
-% opt.cg_language = 'cpp';
-% opt.eigen_solver = 'sturm';
+opt.cg_language = 'cpp';
+opt.eigen_solver = 'sturm_dani';
 opt.cg_eigen_dir = '/usr/local/include/eigen3';
 
-prob_fn = @prob_pc_relpose_5p_nulle_ne;
-[solv, opt] = generate_solver(prob_fn, opt);
+opt.find_upper_trianglar = false;
 
+prob_fn = @prob_pc_relpose_4pra_p6d;
+[solv, opt] = generate_solver(prob_fn, opt);
+% return;
 addpath solvers
+
 solv_fun = str2func(['solver_' solv.name]);
 stats = benchmark_solver(solv_fun,solv,500);
 

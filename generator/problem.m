@@ -46,8 +46,10 @@ classdef problem
             coeff_subs = cell2struct(coeff_eqs(:), coeff_names(:));
             obj.abbr_subs = catstruct(obj.abbr_subs, coeff_subs);
         end
-        function [eq_zp, unk_zp] = rand_eq_zp(obj, p)
-            [kwn_zp, unk_zp] = obj.rand_var_zp(p);
+        function eq_zp = rand_eq_zp(obj, p)
+            [in_zp, ~] = obj.rand_var_zp(p);
+            kwn_zp = obj.unpack_pars(obj.in_subs, in_zp);
+
             eq_zp = subs_var(obj.eqs_sym, catstruct(kwn_zp, obj.abbr_subs),...
                 'verbose', 'zp', p);
             eq_zp = multipol(eq_zp, 'vars', obj.unk_vars);
@@ -63,7 +65,7 @@ classdef problem
                 'You should implement this according to your problem']);
         end
         %------------------------------------------------------------------
-        function [kwn_zp, unk_zp] = rand_var_zp(obj, p)
+        function [in_zp, out_zp] = rand_var_zp(obj, p)
             % rand_var_zp Randomize variables from Zp
             %   [kwn_zp, unk_zp] = rand_var_zp(obj, p) generates random
             %   sample on Zp for variables in this problem. You should instantiate

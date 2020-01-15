@@ -29,10 +29,8 @@ classdef prob_pc_relpose_4pra_p6d < problem
             out_subs.u = obj.u;
             out_subs.t = obj.t;
         end
-        function [kwn_zp, unk_zp] = rand_var_zp(obj, p)
+        function [in_zp, out_zp] = rand_var_zp(obj, p)
             [in_zp, out_zp] = vzp_rand_relpose_pinhole(4, p, {'q', 'qq', 's'}, {'u', 't'});
-            kwn_zp = obj.unpack_pars(obj.in_subs, in_zp);
-            unk_zp = obj.unpack_pars(obj.out_subs, out_zp);
         end
         function [in_rl, out_rl] = rand_par_rl(obj)
             [in_rl, out_rl] = vrl_rand_relpose_pinhole(4, {'q', 'qq', 's'}, {'u', 't'});
