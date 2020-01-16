@@ -17,7 +17,7 @@ classdef prob_pc_relpose_5p_nulle_ne < problem
             abbr_subs = struct([]);
             unk_vars = obj.w.';
         end
-        function [in_subs, out_subs] = gen_par_subs(obj)
+        function [in_subs, out_subs] = gen_arg_subs(obj)
             in_subs = struct();
             in_subs.NE = obj.NE;
             out_subs.w = obj.w;

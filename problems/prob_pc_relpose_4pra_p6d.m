@@ -8,7 +8,7 @@ classdef prob_pc_relpose_4pra_p6d < problem
         t = sym('t%d', [3, 1]);
     end
     methods
-        function [eqs_sym, abbr_subs, unk_vars] = gen_eqs_sym(obj)
+        function [eqs_sym, abbr_subs] = gen_eqs_sym(obj)
             R = sym_quat2dcm([obj.s; obj.u]);            
             E = skew(obj.t) * R;
             eqs_sym = sym([]);
@@ -19,9 +19,8 @@ classdef prob_pc_relpose_4pra_p6d < problem
             eqs_sym(obj.N + 2) = obj.t.' * obj.t - 1;
 
             abbr_subs = struct([]);
-            unk_vars = [obj.u; obj.t].';
         end
-        function [in_subs, out_subs] = gen_par_subs(obj)
+        function [in_subs, out_subs] = gen_arg_subs(obj)
             in_subs = struct();
             in_subs.q = obj.q;
             in_subs.qq = obj.qq;

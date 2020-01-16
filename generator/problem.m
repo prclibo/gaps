@@ -11,23 +11,30 @@ classdef problem
     end
     methods
         function obj = problem()
-            [obj.eqs_sym, obj.abbr_subs, obj.unk_vars] = obj.gen_eqs_sym();
+            [obj.eqs_sym, obj.abbr_subs] = obj.gen_eqs_sym();
+            [obj.in_subs, obj.out_subs] = obj.gen_arg_subs();
+            function out = flatten_and_cat_fields(in)
+                out = struct2cell(in);
+                out = cellfun(@(x) x(:).', out, 'UniformOutput', false);
+                out = horzcat(out{:});
+            end
+            obj.kwn_vars = flatten_and_cat_fields(obj.in_subs);
+            obj.unk_vars = flatten_and_cat_fields(obj.out_subs);            
             obj.eqs = multipol(obj.eqs_sym, 'vars', obj.unk_vars);
             
-            all_vars = symvar(obj.eqs_sym);
-            obj.kwn_vars = setdiff(all_vars, obj.unk_vars);
+            assert(numel(unique(obj.kwn_vars)) == numel(obj.kwn_vars));
+            assert(numel(unique(obj.unk_vars)) == numel(obj.unk_vars));
             
+            all_vars = [obj.kwn_vars, obj.unk_vars];
             % Check if reserved symbols are used
             matches = regexp(sym2char(all_vars), '\<C\d+\>', 'once');
             if ~isempty(matches)
                 error('Found reserved symbols \<C\d+\>. Avoid using this!');
             end
-            
-            [obj.in_subs, obj.out_subs] = obj.gen_par_subs();
         end
-        function [in_subs, out_subs] = gen_par_subs(obj)
-            in_subs = cell2struct(num2cell(obj.kwn_vars), sym2charcell(obj.kwn_vars));
-            out_subs = cell2struct(num2cell(obj.unk_vars), sym2charcell(obj.unk_vars));
+        function [in, out] = gen_arg_subs(obj)
+            in = cell2struct(num2cell(obj.kwn_vars), sym2charcell(obj.kwn_vars));
+            out = cell2struct(num2cell(obj.unk_vars), sym2charcell(obj.unk_vars));
         end
         function obj = gen_coeff_subs(obj)
             coeff_cell = cell(1, numel(obj.eqs));
@@ -49,7 +56,7 @@ classdef problem
         function eq_zp = rand_eq_zp(obj, p)
             [in_zp, ~] = obj.rand_var_zp(p);
             kwn_zp = obj.unpack_pars(obj.in_subs, in_zp);
-
+            
             eq_zp = subs_var(obj.eqs_sym, catstruct(kwn_zp, obj.abbr_subs),...
                 'verbose', 'zp', p);
             eq_zp = multipol(eq_zp, 'vars', obj.unk_vars);
