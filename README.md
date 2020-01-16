@@ -12,7 +12,7 @@ To construct a polynomial solver, inherit the `problem` (see [`generator/problem
 
 `[in, out] = gen_arg_subs(obj)` creates two structs corresponding to input/output variables. Field names of the struct will be argument names used in the generated function. Field values are sym variables that will be used to denote polynomials.
 
-`[eqs, unk_vars] = gen_eqs_sym(obj)` creates sym equation polynomials and sym unknown variables. 
+`[eqs, abbr_subs] = gen_eqs_sym(obj)` creates sym equation polynomials. 
 
 `[kwn_zp, unk_zp] = rand_var_zp(obj, p)` generates random sample on Zp for variables in this problem. Field names in `kwn_zp` and `unk_zp` correspond to the known and unknown sym variables in the polynomials.
 
