@@ -34,7 +34,8 @@ if any(ind_bas == -1)
     % basis monomials missing from expanded set (and not needed)
     % HACK: just add them here with zero coefficient.
     cc = [cc zeros(size(cc,1),nnz(ind_bas==-1))];
-    mm = [mm;basis(ind_bas==-1)'];
+%     mm = [mm;basis(ind_bas==-1)'];
+    mm = [mm, monomials(basis(ind_bas==-1))];
     ind_bas = find_mon_indices(mm, basis);
 end
 ind_red = find_mon_indices(mm, reducible);

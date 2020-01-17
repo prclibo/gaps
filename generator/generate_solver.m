@@ -6,7 +6,7 @@ solv.prob = prob;
 solv.name = class(prob);
 solv.opt = opt;
 solv.n_vars = numel(prob.unk_vars);
-solv.vars = prob.unk_vars;
+solv.vars = multipol(prob.unk_vars, 'vars', prob.unk_vars);
 solv.eqs_zp = cell(1, opt.integer_expansions);
 solv.unk_zp = cell(1, opt.integer_expansions);
 fprintf('Sampling Zp instances\n'); tic;
@@ -97,7 +97,7 @@ for k = 1:length(solv.actions)
     solv.reducible = [solv.reducible solv.actions(k)*solv.basis];
 end
 if opt.force_vars_in_reducibles
-    solv.reducible = unique([solv.reducible create_vars(solv.n_vars)']);
+    solv.reducible = unique([solv.reducible, solv.vars]);
 end
 if ~isempty(opt.extra_reducible)
     solv.reducible = unique([solv.reducible opt.extra_reducible]);

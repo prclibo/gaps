@@ -54,7 +54,7 @@ function [p ia] = setdiff(eq1,eq2)
 % p = eq1(ia);
 
 [eq1 eq2] = eqsize(eq1,eq2);
-[~,ia] = setdiff(str(eq1), str(eq2),'stable');
+[~,ia] = setdiff(string(eq1), string(eq2),'stable');
 ia = ia(:)';
 p = eq1(ia);
 
