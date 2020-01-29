@@ -54,7 +54,7 @@ classdef problem
             obj.abbr_subs = catstruct(obj.abbr_subs, coeff_subs);
         end
         function eq_zp = rand_eq_zp(obj, p)
-            [in_zp, ~] = obj.rand_var_zp(p);
+            [in_zp, ~] = obj.rand_arg_zp(p);
             kwn_zp = obj.unpack_pars(obj.in_subs, in_zp);
             
             eq_zp = subs_var(obj.eqs_sym, catstruct(kwn_zp, obj.abbr_subs),...
@@ -68,23 +68,23 @@ classdef problem
             %   [eqs, unk_vars] = gen_eqs_sym(obj) creates sym equation
             %   polynomials and unknown sym variables. You should instantiate
             %   this member function for your problem.
-            error(['rand_var_zp is not implemented yet!',...
+            error(['rand_arg_zp is not implemented yet!',...
                 'You should implement this according to your problem']);
         end
         %------------------------------------------------------------------
-        function [in_zp, out_zp] = rand_var_zp(obj, p)
-            % rand_var_zp Randomize variables from Zp
-            %   [kwn_zp, unk_zp] = rand_var_zp(obj, p) generates random
+        function [in_zp, out_zp] = rand_arg_zp(obj, p)
+            % rand_arg_zp Randomize variables from Zp
+            %   [kwn_zp, unk_zp] = rand_arg_zp(obj, p) generates random
             %   sample on Zp for variables in this problem. You should instantiate
             %   this member function for your problem. Field names in
             %   kwn_zp and unk_zp correspond to the known and unknown sym
             %   variables in the polynomials.
             
-            error(['rand_var_zp is not implemented yet!',...
+            error(['rand_arg_zp is not implemented yet!',...
                 'You should implement this according to your problem']);
         end
         %------------------------------------------------------------------
-        function [in_rl, out_rl] = rand_par_rl(obj)
+        function [in_rl, out_rl] = rand_arg_rl(obj)
             % rand_var_rl Randomize variables from real field
             %   [kwn_rl, unk_rl] = rand_var_rl(obj) generates random
             %   sample on real field for variables in this problem. You should instantiate

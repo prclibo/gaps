@@ -14,9 +14,9 @@ To construct a polynomial solver, inherit the `problem` (see [`generator/problem
 
 `[eqs, abbr_subs] = gen_eqs_sym(obj)` creates sym equation polynomials. 
 
-`[kwn_zp, unk_zp] = rand_var_zp(obj, p)` generates random sample on Zp for variables in this problem. Field names in `kwn_zp` and `unk_zp` correspond to the known and unknown sym variables in the polynomials.
+`[in_zp, out_zp] = rand_arg_zp(obj, p)` generates random sample on Zp for variables in this problem. Field names in `kwn_zp` and `unk_zp` correspond to the known and unknown sym variables in the polynomials.
 
-`[in_rl, out_rl] = rand_par_rl(obj)` generates random sample on real field for variables in this problem. You should instantiate this member function for your problem. Field names in `kwn_rl` and `unk_rl` correspond to the known and unknown sym variables in the polynomials.
+`[in_rl, out_rl] = rand_arg_rl(obj)` generates random sample on real field for variables in this problem. You should instantiate this member function for your problem. Field names in `kwn_rl` and `unk_rl` correspond to the known and unknown sym variables in the polynomials.
 
 Below is a simple example on solving the 5-pt problem:
 
@@ -58,7 +58,7 @@ classdef prob_pc_relpose_5p_nulle_ne__simple < problem
             % expansions. This this very simple case we will not use it.
             abbr_subs = struct([]);
         end
-        function [in_zp, out_zp] = rand_var_zp(obj, p)
+        function [in_zp, out_zp] = rand_arg_zp(obj, p)
             % For 5-pt problem, arbitrary value of NE always corresponds to
             % valid polynomial system. Therefore we just instantiate a Zp
             % case by random integer. However, usually this does not hold
@@ -72,8 +72,8 @@ classdef prob_pc_relpose_5p_nulle_ne__simple < problem
             % out_zp can be omitted as it is not used right now.
             out_zp = struct();
         end
-        function [in_rl, out_rl] = rand_par_rl(obj)
-            error(['This is similar to `rand_var_zp` with real field values. ',...
+        function [in_rl, out_rl] = rand_arg_rl(obj)
+            error(['This is similar to `rand_arg_zp` with real field values. ',...
                 'We are not using it here as it is for benchmarking']);
         end
     end

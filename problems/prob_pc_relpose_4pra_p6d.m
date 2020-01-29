@@ -28,10 +28,10 @@ classdef prob_pc_relpose_4pra_p6d < problem
             out_subs.u = obj.u;
             out_subs.t = obj.t;
         end
-        function [in_zp, out_zp] = rand_var_zp(obj, p)
+        function [in_zp, out_zp] = rand_arg_zp(obj, p)
             [in_zp, out_zp] = vzp_rand_relpose_pinhole(4, p, {'q', 'qq', 's'}, {'u', 't'});
         end
-        function [in_rl, out_rl] = rand_par_rl(obj)
+        function [in_rl, out_rl] = rand_arg_rl(obj)
             [in_rl, out_rl] = vrl_rand_relpose_pinhole(4, {'q', 'qq', 's'}, {'u', 't'});
         end
     end

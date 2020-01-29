@@ -23,7 +23,7 @@ for iter = 1:iters
     fprintf('\b\b\b\b\b\b\b\b%8d', iter);
 
     rng(iter);
-    [in_rl, out_rl] = prob.rand_par_rl();
+    [in_rl, out_rl] = prob.rand_arg_rl();
 
     out_cell = cell(size(fieldnames(out_rl)));
     in_cell = struct2cell(in_rl);

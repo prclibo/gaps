@@ -35,7 +35,7 @@ classdef prob_pc_relpose_5p_nulle_ne__simple < problem
             % expansions. This this very simple case we will not use it.
             abbr_subs = struct([]);
         end
-        function [in_zp, out_zp] = rand_var_zp(obj, p)
+        function [in_zp, out_zp] = rand_arg_zp(obj, p)
             % For 5-pt problem, arbitrary value of NE always corresponds to
             % valid polynomial system. Therefore we just instantiate a Zp
             % case by random integer. However, usually this does not hold
@@ -49,8 +49,8 @@ classdef prob_pc_relpose_5p_nulle_ne__simple < problem
             % out_zp can be omitted as it is not used right now.
             out_zp = struct();
         end
-        function [in_rl, out_rl] = rand_par_rl(obj)
-            error(['This is similar to `rand_var_zp` with real field values. ',...
+        function [in_rl, out_rl] = rand_arg_rl(obj)
+            error(['This is similar to `rand_arg_zp` with real field values. ',...
                 'We are not using it here as it is for benchmarking']);
         end
     end

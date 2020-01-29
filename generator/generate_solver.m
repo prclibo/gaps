@@ -176,7 +176,10 @@ for tk = find(solv.target_template)'
     solv.templates{tk} = finalize_template(solv,solv.templates{tk}, opt);
     tt = toc;
 
-    fprintf('Elimination template size = [%d,%d], nnz = %d\n',solv.templates{tk}.C_sz,length(solv.templates{tk}.C_ind));
+%     fprintf('Elimination template size = [%d,%d], nnz = %d\n',solv.templates{tk}.C_sz,length(solv.templates{tk}.C_ind));
+    fprintf('Elimination template size = [%d,%d], nnz = %d\n',...
+        solv.templates{tk}.cind_blk_rows(2), sum(solv.templates{tk}.cind_blk_cols([2, 3])),...
+        nnz(solv.templates{tk}.cind_blk{2, 2}) + nnz(solv.templates{tk}.cind_blk{2, 3}));
 
     if opt.remove_extra_columns
         solv.templates{tk} = remove_extra_columns(solv.templates{tk}, solv);

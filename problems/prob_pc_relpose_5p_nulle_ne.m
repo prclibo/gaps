@@ -21,10 +21,10 @@ classdef prob_pc_relpose_5p_nulle_ne < problem
             in_subs.NE = obj.NE;
             out_subs.w = obj.w;
         end
-        function [in_zp, out_zp] = rand_var_zp(obj, p)
+        function [in_zp, out_zp] = rand_arg_zp(obj, p)
             [in_zp, out_zp] = vzp_rand_relpose_pinhole(5, p, {'NE'}, {'w'});
         end
-        function [in_rl, out_rl] = rand_par_rl(obj)
+        function [in_rl, out_rl] = rand_arg_rl(obj)
             [in_rl, out_rl] = vrl_rand_relpose_pinhole(5, {'NE'}, {'w'});
         end
     end
