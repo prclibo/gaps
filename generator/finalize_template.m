@@ -45,6 +45,7 @@ mm = mm(:, [ind_exc ind_red ind_bas]); % FIX (libo)
 
 if opt.find_upper_trianglar
     assert(~opt.sparse_template);
+    % col of leading monos.
     c_lm = arrayfun(@(r) find(cc(r, :), 1, 'first'), 1:size(cc, 1));
     [c_utri, r_utri] = unique(c_lm);
     

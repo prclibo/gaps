@@ -10,7 +10,7 @@ solv.vars = multipol(prob.unk_vars, 'vars', prob.unk_vars);
 solv.eqs_zp = cell(1, opt.integer_expansions);
 solv.unk_zp = cell(1, opt.integer_expansions);
 fprintf('Sampling Zp instances\n'); tic;
-for i = 1:numel(opt.integer_expansions)
+for i = 1:opt.integer_expansions
     solv.eqs_zp{i} = prob.rand_eq_zp(opt.prime_field);
 end
 toc; fprintf('-- Sampled.\n'); tic;
@@ -44,7 +44,11 @@ end
 
 %% Compute monomial basis for quotient space
 if isempty(opt.custom_basis)
-    solv.basis = find_monomial_basis(solv.eqs_zp{1}, solv,opt,solv.name);
+    bases = arrayfun(@(k) {find_monomial_basis(solv.eqs_zp{k}, solv,opt,solv.name)},...
+        1:numel(solv.eqs_zp));
+    bases = horzcat(bases{:});
+    bases = unique(bases);
+    solv.basis = bases;
 else
     solv.basis = opt.custom_basis;
     fprintf('Using custom basis for quotient space.\n');

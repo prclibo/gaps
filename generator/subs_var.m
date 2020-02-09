@@ -1,6 +1,5 @@
 function vals = subs_var(eqs, var_subs, varargin)
 
-rng(21);
 verbose_mask = strcmp(varargin, 'verbose');
 verbose = any(verbose_mask);
 varargin(verbose_mask) = [];

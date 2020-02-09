@@ -19,7 +19,7 @@ result.time_taken = [];
 prob = solv.prob;
 
 fprintf('Solving sample instances for           ');
-for iter = 1:iters
+for iter = 5:iters
     fprintf('\b\b\b\b\b\b\b\b%8d', iter);
 
     rng(iter);
@@ -32,7 +32,8 @@ for iter = 1:iters
         tic;
         [out_cell{:}] = solv_fun(in_cell{:});
         tt = toc;
-    catch
+    catch ME
+%         disp(ME);
         result.failures = result.failures + 1;
         continue;
     end
@@ -56,8 +57,9 @@ for iter = 1:iters
         sol = cat(1, sol{:});
         gt = struct2cell(out_rl);
         gt = cat(1, gt{:});
-        d = norm(sol - gt);
-        min_d = min(min_d, d);
+        d1 = norm(sol - gt);
+        d2 = norm(sol - gt);
+        min_d = min([min_d, d1, d2]);
     end
     
     result.all_res = [result.all_res min_d];

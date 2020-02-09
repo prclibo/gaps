@@ -79,7 +79,7 @@ fprintf(fid,'quit();\n');
 fclose(fid);
 
 eval(['! ' opt.M2_path ' ' fname ' --stop']);
-while ~exist(fname_A,'file'),
+while ~exist(fname_A,'file')
     pause(1);
 end
 

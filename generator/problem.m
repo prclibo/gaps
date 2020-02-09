@@ -1,5 +1,6 @@
 classdef problem
     properties
+        config = struct;
         eqs = sym([]);
         eqs_sym = sym([]);
         
@@ -10,7 +11,16 @@ classdef problem
         out_subs = struct();
     end
     methods
-        function obj = problem()
+        function obj = problem(config)
+            if nargin > 0
+                obj.config = config
+            end
+            if nargin == 0 || ~isfield(obj.config, 'rand_seed')
+                obj.config.rand_seed = 23;
+            end
+            rng(obj.config.rand_seed);
+            disp('Problem Config:')
+            disp(obj.config);
             [obj.eqs_sym, obj.abbr_subs] = obj.gen_eqs_sym();
             [obj.in_subs, obj.out_subs] = obj.gen_arg_subs();
             function out = flatten_and_cat_fields(in)

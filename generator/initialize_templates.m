@@ -5,7 +5,7 @@ templates = cell(1,length(solv.actions));
 % which reducibles should be included in all templates?
 all_inc = false(1,length(solv.reducible));
 if opt.force_vars_in_reducibles
-    red_vars = setdiff(solv.vars, solv.basis);
+    red_vars = mono_setdiff(solv.vars, solv.basis);
     all_inc(find_mon_indices(solv.reducible, red_vars)) = 1;
 end
 if ~isempty(opt.extra_reducible)
