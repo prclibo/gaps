@@ -2,15 +2,19 @@ function [ A, opt ] = find_template( eqs, solv, opt, id )
 
 if nargin < 4 || isempty(id)
     id = num2str(feature('getpid'));
+elseif ~ischar(id)
+    id = num2str(id);
 end
 
 if ~exist('./cache','dir'), mkdir('cache'); end
-fname = ['./cache/find_template.'  id '.m2'];
+fname = ['./cache/find_template.' solv.name '.' id '.m2'];
+
+disp(fname);
 
 basis = solv.basis;
 reducible = solv.reducible;
 
-if exist(fname,'file'), delete(fname); end
+% if exist(fname,'file'), delete(fname); end
 
 fname_A = ['cache/matrix.' id '.txt'];
 fid = fopen(fname,'w');
@@ -19,14 +23,14 @@ unk_vars = solv.vars;
 header = generate_ring_header(numel(unk_vars), opt );
 fprintf(fid,header);
 
-fprintf(fid, 'red = matrix({{%s}});\n', strjoin(string(reducible, false), ', '));
-fprintf(fid,'b = matrix({{%s}});\n',strjoin(string(basis, false), ', '));
+fprintf(fid, 'red = matrix(R, {{%s}});\n', strjoin(string(reducible, false), ', '));
+fprintf(fid,'b = matrix(R, {{%s}});\n',strjoin(string(basis, false), ', '));
 
 for i=1:length(eqs)
     fprintf(fid,'eq%u = %s\n',i,string(eqs(i), false));
 end
 eqname = strjoin(strcat('eq', string(1:numel(eqs))), ', ');
-fprintf(fid,'eqs = matrix({{%s}});\n', eqname);
+fprintf(fid,'eqs = matrix(R, {{%s}});\n', eqname);
 fprintf(fid,'I = ideal eqs;\n');
 fprintf(fid,'gbTrace = %d;\n',opt.M2_gbTrace);    
 
@@ -78,9 +82,12 @@ fprintf(fid,'%s\n',[' "' fname_A '" << toString A << close;']);
 fprintf(fid,'quit();\n');
 fclose(fid);
 
-eval(['! ' opt.M2_path ' ' fname ' --stop']);
-while ~exist(fname_A,'file')
-    pause(1);
+code = system([opt.M2_path ' ' fname ' --stop']);
+
+if code ~= 0
+    warning('M2 return code is %d!', code);
+    A = repmat({[]}, numel(eqs), numel(solv.reducible));
+    return
 end
 
 
@@ -100,9 +107,9 @@ else
     end
 end
 
-if exist(fname,'file')
-    delete(fname)
-end
+% if exist(fname,'file')
+%     delete(fname)
+% end
 
 
 if ~isempty(opt.saturate_mon) && exist(fname_sat,'file')    

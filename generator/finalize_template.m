@@ -16,6 +16,8 @@ for k = 1:numel(mdegs)
         offset = offset + 1;
         eqs_templ(offset).mdegs = mdegs{k} + templ.monomials{k}(:, i);
         eqs_templ(offset).cinds = cinds{k};
+        eqs_templ(offset).orig_eq_ind = k;
+        eqs_templ(offset).quot_mono = templ.monomials{k}(:, i);
     end
 end
 [cc, mm] = coeff2mat({eqs_templ.cinds}, {eqs_templ.mdegs});
@@ -59,6 +61,8 @@ else
 end
 
 assert(len_utri <= numel(ind_exc));
+
+templ.eqs_templ = eqs_templ;
 
 rows = [len_utri, size(cc, 1) - len_utri];
 cols = [len_utri, size(cc, 2) - len_utri - numel(ind_bas), numel(ind_bas)];

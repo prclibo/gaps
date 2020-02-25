@@ -3,7 +3,10 @@ function [solv,opt] = generate_solver(prob_fn, opt)
 prob = prob_fn();
 
 solv.prob = prob;
-solv.name = class(prob);
+if isempty(opt.solver_name)
+    opt.solver_name = ['solver_', class(prob)];
+end
+solv.name = opt.solver_name;
 solv.opt = opt;
 solv.n_vars = numel(prob.unk_vars);
 solv.vars = multipol(prob.unk_vars, 'vars', prob.unk_vars);
@@ -11,7 +14,12 @@ solv.eqs_zp = cell(1, opt.integer_expansions);
 solv.unk_zp = cell(1, opt.integer_expansions);
 fprintf('Sampling Zp instances\n'); tic;
 for i = 1:opt.integer_expansions
-    solv.eqs_zp{i} = prob.rand_eq_zp(opt.prime_field);
+    [solv.eqs_zp{i}, in_zp, out_zp] = prob.rand_eq_zp(opt.prime_field);
+        
+    solv.kwn_zp{i} = prob.unpack_pars(prob.in_subs, in_zp);
+    solv.unk_zp{i} = prob.unpack_pars(prob.out_subs, out_zp);
+    solv.in_zp{i} = in_zp;
+    solv.out_zp{i} = in_zp;
 end
 toc; fprintf('-- Sampled.\n'); tic;
 
@@ -44,10 +52,11 @@ end
 
 %% Compute monomial basis for quotient space
 if isempty(opt.custom_basis)
-    bases = arrayfun(@(k) {find_monomial_basis(solv.eqs_zp{k}, solv,opt,solv.name)},...
+    bases_zp = arrayfun(@(k) {find_monomial_basis(solv.eqs_zp{k}, solv,opt, k)},...
         1:numel(solv.eqs_zp));
-    bases = horzcat(bases{:});
+    bases = horzcat(bases_zp{:});
     bases = unique(bases);
+    assert(~isempty(bases));
     solv.basis = bases;
 else
     solv.basis = opt.custom_basis;
@@ -78,7 +87,7 @@ end
 if isempty(opt.actmon)
     solv.actions = select_actions(solv,opt);
 else
-    solv.actions = opt.actmon;
+    solv.actions = solv.vars(opt.actmon);
 end
 fprintf('Action monomial = [ %s ]\n', strjoin(string(solv.actions)));
 
@@ -118,14 +127,21 @@ fprintf('\tR = [ %s ]\n', strjoin(string(solv.reducible), ', '));
 solv.templates = initialize_templates(solv,opt);
 
 fprintf('Finding elimination templates ... ');
+
+% As: N_zp * {N_eqs * N_red * {N_var * N_monos_resp}}
 As = cell(1,length(solv.eqs_zp));
 for k = 1:length(solv.eqs_zp)
-    id = [solv.name '.' num2str(k)];
-    [As{k},opt] = find_template(solv.eqs_zp{k},solv,opt,id);
+    if ~isempty(bases_zp{k})
+        % TODO Havn't solve opt.sat for multiple instances.
+        [As{k},opt] = find_template(solv.eqs_zp{k},solv,opt,k);
+    else
+        As{k} = repmat({[]}, numel(solv.prob.eqs), numel(solv.reducible));
+    end
 end
 fprintf('OK\n');
 
 % merge expansions
+% A: N_eqs * N_red * {N_var * N_monos_resp}
 A = cell(size(As{1}));
 for k = 1:numel(A)
     tmp = cellfun(@(x) x{k},As,'UniformOutput',0);
@@ -133,6 +149,7 @@ for k = 1:numel(A)
     A{k} = -unique(-A{k}','rows')';
 end
 
+solv.A = A;
 
 solv = build_templates(A,solv,opt);
 
@@ -177,7 +194,7 @@ for tk = find(solv.target_template)'
     fprintf('Building solver (%s_%s)\n',solv.name,solv.templates{tk}.desc);   
        
     tic
-    solv.templates{tk} = finalize_template(solv,solv.templates{tk}, opt);
+        solv.templates{tk} = finalize_template(solv,solv.templates{tk}, opt);
     tt = toc;
 
 %     fprintf('Elimination template size = [%d,%d], nnz = %d\n',solv.templates{tk}.C_sz,length(solv.templates{tk}.C_ind));

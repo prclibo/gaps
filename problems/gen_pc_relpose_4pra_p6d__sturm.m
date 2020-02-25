@@ -15,7 +15,7 @@ prob_fn = @prob_pc_relpose_4pra_p6d;
 addpath solvers
 
 solv_fun = str2func(['solver_' solv.name]);
-stats = benchmark_solver(solv_fun,solv,500);
+stats = benchmark_solver(solv_fun,solv.prob,500);
 
 figure(1)
 clf

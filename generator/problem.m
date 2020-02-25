@@ -1,4 +1,4 @@
-classdef problem
+classdef problem < handle
     properties
         config = struct;
         eqs = sym([]);
@@ -13,7 +13,7 @@ classdef problem
     methods
         function obj = problem(config)
             if nargin > 0
-                obj.config = config
+                obj.config = config;
             end
             if nargin == 0 || ~isfield(obj.config, 'rand_seed')
                 obj.config.rand_seed = 23;
@@ -39,7 +39,7 @@ classdef problem
             % Check if reserved symbols are used
             matches = regexp(sym2char(all_vars), '\<C\d+\>', 'once');
             if ~isempty(matches)
-                error('Found reserved symbols \<C\d+\>. Avoid using this!');
+                error('MCCAT:problem:ReservedSymbols', 'Found reserved symbols \<C\d+\>. Avoid using this!');
             end
         end
         function [in, out] = gen_arg_subs(obj)
@@ -63,17 +63,45 @@ classdef problem
             coeff_subs = cell2struct(coeff_eqs(:), coeff_names(:));
             obj.abbr_subs = catstruct(obj.abbr_subs, coeff_subs);
         end
-        function eq_zp = rand_eq_zp(obj, p)
-            [in_zp, ~] = obj.rand_arg_zp(p);
+        function [eq_zp, in_zp, out_zp] = rand_eq_zp(obj, p)
+            [in_zp, out_zp] = obj.rand_arg_zp(p);
             kwn_zp = obj.unpack_pars(obj.in_subs, in_zp);
+            unk_zp = obj.unpack_pars(obj.out_subs, out_zp);
             
             eq_zp = subs_var(obj.eqs_sym, catstruct(kwn_zp, obj.abbr_subs),...
                 'verbose', 'zp', p);
+            
+            eq_zp_val = subs_var(eq_zp, catstruct(unk_zp, obj.abbr_subs),...
+                'zp', p);
+            fprintf('eq_zp veritfied to be: %s\n', sym2char(eq_zp_val.'));;
+            
             eq_zp = multipol(eq_zp, 'vars', obj.unk_vars);
         end
         
         %------------------------------------------------------------------
-        function [eqs, unk_vars] = gen_eqs_sym(obj)
+        function [in_diff, out_diff] = gen_diff_eqs(obj)
+            assert(isempty(obj.abbr_subs),...
+                'TODO: Currently havenot handled differentiation with abbr_subs yet.');
+            num_eqs = numel(obj.eqs_sym);
+            function J = inner(subs_)
+                fnames = fieldnames(subs_);
+                for i = 1:numel(fnames)
+                    vars = subs_.(fnames{i});
+                    num_vars = numel(vars);
+                    Jvars = sym(zeros(num_eqs, num_vars));
+                    for eqi = 1:num_eqs
+                        for vi = 1:num_vars
+                            Jvars(eqi, vi) = diff(obj.eqs_sym(eqi), vars(vi));
+                        end
+                    end
+                    J.(fnames{i}) = Jvars;
+                end
+            end
+            in_diff = inner(obj.in_subs);
+            out_diff = inner(obj.out_subs);
+        end
+        %------------------------------------------------------------------
+        function [eqs, unk_vars] = gen_eqs_sym(obj) %#ok<*MANU,*STOUT>
             % gen_eqs_sym Creates polynomials
             %   [eqs, unk_vars] = gen_eqs_sym(obj) creates sym equation
             %   polynomials and unknown sym variables. You should instantiate
@@ -82,7 +110,7 @@ classdef problem
                 'You should implement this according to your problem']);
         end
         %------------------------------------------------------------------
-        function [in_zp, out_zp] = rand_arg_zp(obj, p)
+        function [in_zp, out_zp] = rand_arg_zp(obj, p) %#ok<*INUSD>
             % rand_arg_zp Randomize variables from Zp
             %   [kwn_zp, unk_zp] = rand_arg_zp(obj, p) generates random
             %   sample on Zp for variables in this problem. You should instantiate

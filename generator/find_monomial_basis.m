@@ -2,11 +2,14 @@ function [ basis ] = find_monomial_basis(eqs_zp, solv, opt, id )
 
 if nargin < 3 || isempty(id)
     id = num2str(feature('getpid'));
+elseif ~ischar(id)
+    id = num2str(id);
 end
 
 if ~exist('./cache','dir'), mkdir('cache'); end
 
-fname = ['./cache/find_monomial_basis.'  id '.m2'];
+fname = ['./cache/find_monomial_basis.' solv.name '.' id '.m2'];
+disp(fname);
 if exist(fname,'file'), delete(fname); end
 
 fname_b = ['cache/basis.' id '.txt'];
@@ -39,11 +42,15 @@ fclose(fid);
 
 code = system([opt.M2_path ' ' fname ' --stop']);
 
-assert(code == 0, 'M2 return code is %d!', code);
+if code ~= 0
+    warning('M2 return code is %d!', code);
+    basis = [];
+    return
+end
 
 % read result
 basis = read_m2_matrix(fname_b, vars(eqs_zp(1)));
 assert(~isempty(basis), 'Didnot find basis! Check if the ideal is zero-dimensional');
 
-if exist(fname,'file'), delete(fname); end
+% if exist(fname,'file'), delete(fname); end
 % if exist(fname_b,'file'), delete(fname_b); end

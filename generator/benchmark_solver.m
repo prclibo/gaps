@@ -1,4 +1,4 @@
-function [ result ] = benchmark_solver( solv_fun, solv, iters, discard_zero_sol )
+function [ result ] = benchmark_solver( solv_fun, prob, iters, discard_zero_sol )
 
 if nargin < 3
     iters = 10;
@@ -14,9 +14,9 @@ result.all_res = [];
 result.failures = 0;
 result.time_taken = [];
 
-% Hack to figure out how large the data is
-% TODO make better choices in design (and life)
-prob = solv.prob;
+if isa(prob, 'function_handle')
+    prob = prob();
+end
 
 fprintf('Solving sample instances for           ');
 for iter = 5:iters

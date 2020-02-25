@@ -32,6 +32,7 @@ function template = build_template(template,A,opt)
         end
     end
     
+    % template.monomials{i}: all monos need to multiple on eq_i
     template.monomials = cell(size(A,1),1);    
     for i = 1:size(A,1)
         Ai = A(i,:);        

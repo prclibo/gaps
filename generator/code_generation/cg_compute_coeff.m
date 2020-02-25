@@ -30,7 +30,7 @@ else
     expd_str = arrayfun(@char, coeff_eqs, 'UniformOutput', false);
     idx_str = strseq('', 1:numel(coeff_eqs));
     coeff_str = strcat('coeffs(', idx_str(:), ') =\t', expd_str(:), ';\n');
-
+    coeff_str = sprintf(horzcat(coeff_str{:}));
     str = [str coeff_str];
 end
 

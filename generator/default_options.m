@@ -176,6 +176,7 @@ default_opt.generalized_eigenvalue_solver = 0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % New
 default_opt.find_upper_trianglar = false;
+default_opt.solver_name = '';
 
 % merge into opt
 fields = fieldnames(default_opt);

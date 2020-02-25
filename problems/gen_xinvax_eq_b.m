@@ -1,23 +1,23 @@
+clear
 opt = default_options();
 opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
 opt.optimize_coefficients = true;
+opt.use_sym = false;
+opt.force_vars_in_reducibles = true;
+opt.integer_expansions = 6;
 opt.remove_extra_columns = false;
-opt.find_upper_trianglar = true;
-% opt.sparse_template = true;
-opt.cg_language = 'cpp';
-opt.eigen_solver = 'eigs_only';
-% opt.eigen_solver = 'sturm';
-opt.cg_eigen_dir = '/usr/local/include/eigen3';
+% opt.find_upper_trianglar = true;
 
-% opt.find_upper_trianglar = false;
+config.rand_seed = 2;
 
-prob_fn = @prob_pc_relpose_4pra_t2d;
+opt.solver_name = sprintf('xinvax_eq_b');
+
+prob_fn = @() prob_xinvax_eq_b(config);
 [solv, opt] = generate_solver(prob_fn, opt);
-% return;
-addpath solvers
 
+% return;
 solv_fun = str2func(['solver_' solv.name]);
-stats = benchmark_solver(solv_fun,solv.prob,500);
+stats = benchmark_solver(solv_fun,solv,500);
 
 figure(1)
 clf
