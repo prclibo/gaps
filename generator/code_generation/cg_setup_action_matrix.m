@@ -10,7 +10,7 @@ if opt.generalized_eigenvalue_solver
 end
 
 % check if the template is square
-if template.C_sz(1) == template.C_sz(2)-length(template.basis)
+if false % template.C_sz(1) == template.C_sz(2)-length(template.basis)
     if strcmp(opt.linear_solver,'backslash')
         str = [str sprintf('C1 = C0 \\ C1;\n')];
     elseif strcmp(opt.linear_solver,'qr')

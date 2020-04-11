@@ -135,11 +135,11 @@ while ~done
 end
 
 if any(~found_target)
-%     str = 'unable to extract: ';
-%     for k = find(~found_target)
-%         str = [str sprintf('%s ',char(target_mons(k)))];
-%     end
-%     warning(str);
+    str = 'unable to extract: ';
+    for k = find(~found_target)
+        str = [str sprintf('%s ',char(string(target_mons(k))))];
+    end
+    warning(str);
 end
 
 

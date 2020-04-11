@@ -90,7 +90,11 @@ for i = 1:numel(eqs)
     cidxs = zeros(1,nterms);
     coefs = sym(zeros(1,nterms));
     pl = feval(symengine, 'matrix', pl);
-    coefs = pl(:, 1).';
+    if isempty(pl)
+        coefs = [];
+    else
+        coefs = pl(:, 1).';
+    end
     for j=1:nterms
         m(:,j) = pl(j, 2);
     end

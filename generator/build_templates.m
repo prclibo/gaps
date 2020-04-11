@@ -37,6 +37,9 @@ function template = build_template(template,A,opt)
     for i = 1:size(A,1)
         Ai = A(i,:);        
         template.monomials{i} = unique(cat(2,Ai{:})','rows')';
+        if isempty(template.monomials{i})
+            template.monomials{i} = zeros(nvars(basis(1)), 1);
+        end
     end
     template.sz = sum(cellfun(@(x) size(x,2),template.monomials));  
    

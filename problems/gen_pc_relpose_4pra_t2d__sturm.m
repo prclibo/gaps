@@ -12,6 +12,7 @@ opt.cg_eigen_dir = '/usr/local/include/eigen3';
 % opt.find_upper_trianglar = false;
 
 prob_fn = @prob_pc_relpose_4pra_t2d;
+prob_fn = @prob_pc_relpose_4pra_sir2__example;
 [solv, opt] = generate_solver(prob_fn, opt);
 % return;
 addpath solvers

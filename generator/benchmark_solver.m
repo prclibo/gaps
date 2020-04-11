@@ -19,7 +19,7 @@ if isa(prob, 'function_handle')
 end
 
 fprintf('Solving sample instances for           ');
-for iter = 5:iters
+for iter = 1:iters
     fprintf('\b\b\b\b\b\b\b\b%8d', iter);
 
     rng(iter);
@@ -33,7 +33,7 @@ for iter = 5:iters
         [out_cell{:}] = solv_fun(in_cell{:});
         tt = toc;
     catch ME
-%         disp(ME);
+        disp(ME);
         result.failures = result.failures + 1;
         continue;
     end
