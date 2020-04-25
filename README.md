@@ -87,3 +87,7 @@ See `problems/prob_*.m` for more examples.
 
 After construct your problem, call `generate_solver` to run GAPS. Usually you will want to setup some options per problem, see `problems/gen_*.m` for examples.
 
+Dependencies
+------------
+
+GAPS contains a modified version of [LundUniversityComputerVision/multipol](https://github.com/LundUniversityComputerVision/multipol). The modification allows Matlab symbols to be coefficients of a multipol polynomial. Thanks goes to @kalleastrom for issuing a BSD-3 Clause license for multipol.
