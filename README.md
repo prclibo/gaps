@@ -8,6 +8,14 @@ GAPS is a tool to generate automatic polynomial solvers for a given multi-var po
 
 GAPS wraps and improves the `autogen_v0_5` from Viktor Larsson.
 
+Dependencies
+------------
+
+* GAPS calls [`Macaulay2`](http://www.math.uiuc.edu/Macaulay2/) (GPLv2) to compute Groebner basis and requires it to be installed beforehand.
+
+* GAPS contains a modified version of [LundUniversityComputerVision/multipol](https://github.com/LundUniversityComputerVision/multipol). The modification allows Matlab symbols to be coefficients of a multipol polynomial. Thanks goes to @kalleastrom for issuing a BSD 3-Clause license for multipol.
+
+
 Quick Start
 -----------
 
@@ -87,7 +95,3 @@ See `problems/prob_*.m` for more examples.
 
 After construct your problem, call `generate_solver` to run GAPS. Usually you will want to setup some options per problem, see `problems/gen_*.m` for examples.
 
-Dependencies
-------------
-
-GAPS contains a modified version of [LundUniversityComputerVision/multipol](https://github.com/LundUniversityComputerVision/multipol). The modification allows Matlab symbols to be coefficients of a multipol polynomial. Thanks goes to @kalleastrom for issuing a BSD-3 Clause license for multipol.
