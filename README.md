@@ -1,6 +1,9 @@
 GAPS: A Generator for Automatic Polynomial Solvers
 ==================================================
 
+[![image](https://img.shields.io/github/license/prclibo/gaps)](https://github.com/prclibo/gaps/blob/master/LICENSE)
+[![image](https://img.shields.io/badge/cs.CV-arXiv%3A2003.XXXX-B31B1B.svg)](https://arvix.org)
+
 GAPS is a tool to generate automatic polynomial solvers for a given multi-var polynomials system with varying coefficients. It is originally intended to construct solvers for _minimal problems in computer vision_.
 
 GAPS wraps and improves the `autogen_v0_5` from Viktor Larsson.
