@@ -1,7 +1,7 @@
 function [ template ] = remove_extra_columns( template, solv )
 
 fprintf('Removing extra columns ... ');
-
+opt = solv.opt;
 if opt.find_upper_trianglar
     error('Not handled');
 end
