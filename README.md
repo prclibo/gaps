@@ -33,6 +33,8 @@ Dependencies
 Quick Start
 -----------
 
+For longer tutorial and technique introdution, please check the [arXiv report](https://arxiv.org/abs/2004.11765).
+
 To construct a polynomial solver, inherit the `problem` (see [`generator/problem.m`]()) class to specify your polynomial system. Implement three functions in your inheritance.
 
 `[in, out] = gen_arg_subs(obj)` creates two structs corresponding to input/output variables. Field names of the struct will be argument names used in the generated function. Field values are sym variables that will be used to denote polynomials.
