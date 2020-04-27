@@ -2,18 +2,32 @@ GAPS: A Generator for Automatic Polynomial Solvers
 ==================================================
 
 [![image](https://img.shields.io/github/license/prclibo/gaps)](https://github.com/prclibo/gaps/blob/master/LICENSE)
-[![image](https://img.shields.io/badge/cs.CV-arXiv%3A2003.XXXX-B31B1B.svg)](https://arvix.org)
+[![image](https://img.shields.io/badge/cs.CV-arXiv%3A2004.11765-B31B1B.svg)](https://arxiv.org/abs/2004.11765)
 
 GAPS is a tool to generate automatic polynomial solvers for a given multi-var polynomials system with varying coefficients. It is originally intended to construct solvers for _minimal problems in computer vision_.
 
 GAPS wraps and improves the `autogen_v0_5` from Viktor Larsson.
+
+References
+----------
+
+Cite the following report ([arXiv link](https://arxiv.org/abs/2004.11765)) if you are using GAPS. This report also includes a short tutorial of the software.
+
+```bibtex
+@article{li2020gaps,
+  title={GAPS: Generator for Automatic Polynomial Solvers},
+  author={Li, Bo and Larsson, Viktor},
+  journal={arXiv preprint arXiv:2004.11765},
+  year={2020}
+}
+```
 
 Dependencies
 ------------
 
 * GAPS calls [`Macaulay2`](http://www.math.uiuc.edu/Macaulay2/) (GPLv2) to compute Groebner basis and requires it to be installed beforehand.
 
-* GAPS contains a modified version of [LundUniversityComputerVision/multipol](https://github.com/LundUniversityComputerVision/multipol). The modification allows Matlab symbols to be coefficients of a multipol polynomial. Thanks goes to @kalleastrom for issuing a BSD 3-Clause license for multipol.
+* GAPS contains a modified version of [LundUniversityComputerVision/multipol](https://github.com/LundUniversityComputerVision/multipol). The modification allows Matlab symbols to be coefficients of a multipol polynomial. We thank @kalleastrom for issuing a BSD 3-Clause license for multipol.
 
 
 Quick Start
