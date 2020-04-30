@@ -10,7 +10,7 @@ opt.cg_eigen_dir = '/usr/local/include/eigen3';
 prob_fn = @prob_pc_relpose_5p_nulle_ne;
 [solv, opt] = generate_solver(prob_fn, opt);
 
-addpath solvers
+addpath solvers_cpp
 solv_fun = str2func(['solver_' solv.name]);
 stats = benchmark_solver(solv_fun,solv.prob,500);
 

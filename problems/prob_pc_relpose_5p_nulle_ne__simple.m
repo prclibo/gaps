@@ -47,7 +47,7 @@ classdef prob_pc_relpose_5p_nulle_ne__simple < problem
             % are symbolic integers.
             in_zp.NE = sym(randi([1, p - 1], [4, 3, 3]));
             % out_zp can be omitted as it is not used right now.
-            out_zp = struct();
+            out_zp.w = sym(zeros(3,1));
         end
         function [in_rl, out_rl] = rand_arg_rl(obj)
             error(['This is similar to `rand_arg_zp` with real field values. ',...

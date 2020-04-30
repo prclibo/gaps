@@ -167,6 +167,7 @@ classdef problem < handle
                 y = cellfun(@(z) z(:), y, 'UniformOutput', false);
                 y = cat(1, y{:});
             end
+            assert(numel(fieldnames(par_subs)) == numel(fieldnames(val_subs)));
             assert(all(strcmp(fieldnames(par_subs), fieldnames(val_subs))));
             pars = sym2charcell(expd_cat_fields(par_subs));
             vals = num2cell(expd_cat_fields(val_subs));
