@@ -25,6 +25,8 @@ Cite the following report ([arXiv link](https://arxiv.org/abs/2004.11765)) if yo
 Dependencies
 ------------
 
+* GAPS is developed under Matlab 2018a. Feel free to open a pull request if you meet and fix compatibility issue.
+
 * GAPS calls [`Macaulay2`](http://www.math.uiuc.edu/Macaulay2/) (GPLv2) to compute Groebner basis and requires it to be installed beforehand.
 
 * GAPS contains a modified version of [LundUniversityComputerVision/multipol](https://github.com/LundUniversityComputerVision/multipol). The modification allows Matlab symbols to be coefficients of a multipol polynomial. We thank @kalleastrom for issuing a BSD 3-Clause license for multipol.
