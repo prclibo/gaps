@@ -17,9 +17,11 @@ for i = 1:opt.integer_expansions
     [solv.eqs_zp{i}, in_zp, out_zp] = prob.rand_eq_zp(opt.prime_field);
         
     solv.kwn_zp{i} = prob.unpack_pars(prob.in_subs, in_zp);
-    solv.unk_zp{i} = prob.unpack_pars(prob.out_subs, out_zp);
     solv.in_zp{i} = in_zp;
-    solv.out_zp{i} = in_zp;
+    if ~isempty(fieldnames(out_zp))
+        solv.unk_zp{i} = prob.unpack_pars(prob.out_subs, out_zp);
+        solv.out_zp{i} = out_zp;
+    end
 end
 toc; fprintf('-- Sampled.\n'); tic;
 

@@ -66,14 +66,16 @@ classdef problem < handle
         function [eq_zp, in_zp, out_zp] = rand_eq_zp(obj, p)
             [in_zp, out_zp] = obj.rand_arg_zp(p);
             kwn_zp = obj.unpack_pars(obj.in_subs, in_zp);
-            unk_zp = obj.unpack_pars(obj.out_subs, out_zp);
-            
             eq_zp = subs_var(obj.eqs_sym, catstruct(kwn_zp, obj.abbr_subs),...
                 'verbose', 'zp', p);
-            
-            eq_zp_val = subs_var(eq_zp, catstruct(unk_zp, obj.abbr_subs),...
-                'zp', p);
-            fprintf('eq_zp veritfied to be: %s\n', sym2char(eq_zp_val.'));;
+
+            assert(isstruct(out_zp));
+            if ~isempty(fieldnames(out_zp))
+                unk_zp = obj.unpack_pars(obj.out_subs, out_zp);
+                eq_zp_val = subs_var(eq_zp, catstruct(unk_zp, obj.abbr_subs),...
+                    'zp', p);
+                fprintf('eq_zp veritfied to be: %s\n', sym2char(eq_zp_val.'));
+            end
             
             eq_zp = multipol(eq_zp, 'vars', obj.unk_vars);
         end
