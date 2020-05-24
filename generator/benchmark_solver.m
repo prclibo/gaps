@@ -58,7 +58,7 @@ for iter = 1:iters
         gt = struct2cell(out_rl);
         gt = cat(1, gt{:});
         d1 = norm(sol - gt);
-        d2 = norm(sol - gt);
+        d2 = norm(sol + gt);
         min_d = min([min_d, d1, d2]);
     end
     

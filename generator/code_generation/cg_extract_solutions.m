@@ -22,14 +22,18 @@ par_names = fieldnames(prob.out_subs);
 for i = 1:numel(par_names)
     par_name = par_names{i};
     subs_ = prob.out_subs.(par_name);
-    str = [str, sprintf('%s = cell(1, nsols);\n', par_name)];
-    str = [str, sprintf('for isol = 1:nsols\n')];
-    str = [str, sprintf('\t%s{isol} = nan(%d, %d);\n',...
-        par_name, size(subs_, 1), size(subs_, 2))];
-    for ivar = 1:numel(subs_)
-        str = [str, sprintf('\t%s{isol}(%d) = %s(isol); \n', par_name, ivar, char(subs_(ivar)))];
+    if numel(subs_) > 1
+        str = [str, sprintf('%s = cell(1, nsols);\n', par_name)];
+        str = [str, sprintf('for isol = 1:nsols\n')];
+        str = [str, sprintf('\t%s{isol} = nan(%d, %d);\n',...
+            par_name, size(subs_, 1), size(subs_, 2))];
+        for ivar = 1:numel(subs_)
+            str = [str, sprintf('\t%s{isol}(%d) = %s(isol); \n', par_name, ivar, char(subs_(ivar)))];
+        end
+        str = [str, sprintf('end\n')];
+    else
+        str = [str, sprintf('%s = num2cell(%s);\n', par_name, par_name)];        
     end
-    str = [str, sprintf('end\n')];
 end
 
 % Unpack grouped known vars.
