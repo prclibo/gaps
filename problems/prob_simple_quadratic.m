@@ -13,7 +13,11 @@ classdef prob_simple_quadratic < problem
         end
         function [in_zp, out_zp] = rand_arg_zp(obj, p)
             in_zp.c = mod([     8     1   -38;    3     5     -57], p);
-            out_zp.x = [2, 3];
+            out_zp = struct;
+            % The solution is as below.
+            % Provided if you know the solution so the software can help
+            % check if the full equations evaluate to 0.
+            % out_zp.x = [2, 3];
         end
         function [in_rl, out_rl] = rand_arg_rl(obj)
             in_rl.c = [     8     1   -38;    3     5     -57];
