@@ -12,11 +12,11 @@ for k = 1:numel(mp)
         unk_vars = mp(k).vars(:);
     else
         n = numel(mp(k).vars);
-        unk_vars = sym('x%d', [n, 1]);
+        unk_vars = sym('x', [n, 1]);
     end
     
     if ~isempty(mp(k).monomials)
-        monos = string(prod(unk_vars .^ int8(mp(k).monomials)));
+        monos = string(prod(unk_vars .^ int8(mp(k).monomials), 1));
         one_mask = logical(mp(k).coeffs == 1);
         coefs = string(mp(k).coeffs);
         coefs(one_mask) = "";

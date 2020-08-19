@@ -1,18 +1,20 @@
 opt = default_options();
 opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
 opt.optimize_coefficients = true;
+opt.use_sym = false;
+% opt.force_vars_in_reducibles = true;
 opt.remove_extra_columns = false;
-opt.find_upper_trianglar = true;
+% opt.find_upper_trianglar = true;
 
-opt.find_upper_trianglar = false;
+config.len = 3;
+config.rand_seed = 2;
 
-prob_fn = @prob_pc_relpose_4pra_p6d;
+prob_fn = @() prob_simple_quadratic(config);
 [solv, opt] = generate_solver(prob_fn, opt);
-% return;
-addpath solvers
 
-solv_fun = str2func(solv.name);
-stats = benchmark_solver(solv_fun, solv.prob, 500);
+% return;
+solv_fun = str2func(['solver_' solv.name]);
+stats = benchmark_solver(solv_fun,solv.prob,500);
 
 figure(1)
 clf

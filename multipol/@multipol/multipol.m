@@ -80,6 +80,9 @@ function s = from_sym(eqs, vars)
 
 s = repmat(multipol, size(eqs));
 var_str = evalc('disp(vars(:).'')');
+if numel(vars) == 1
+    var_str = ['[', var_str, ']'];
+end
 for i = 1:numel(eqs)
     eq = eqs(i);
     % Same speed the below.

@@ -31,6 +31,9 @@ classdef problem < handle
             obj.kwn_vars = flatten_and_cat_fields(obj.in_subs);
             obj.unk_vars = flatten_and_cat_fields(obj.out_subs);            
             obj.eqs = multipol(obj.eqs_sym, 'vars', obj.unk_vars);
+            if numel(obj.unk_vars) == 1
+                error('GAPS:problem:DontBother', 'Do not bother me with uni-variate equation. Solve it by your self.');
+            end
             
             assert(numel(unique(obj.kwn_vars)) == numel(obj.kwn_vars));
             assert(numel(unique(obj.unk_vars)) == numel(obj.unk_vars));
@@ -39,7 +42,7 @@ classdef problem < handle
             % Check if reserved symbols are used
             matches = regexp(sym2char(all_vars), '\<C\d+\>', 'once');
             if ~isempty(matches)
-                error('MCCAT:problem:ReservedSymbols', 'Found reserved symbols \<C\d+\>. Avoid using this!');
+                error('GAPS:problem:ReservedSymbols', 'Found reserved symbols \<C\d+\>. Avoid using this!');
             end
         end
         function [in, out] = gen_arg_subs(obj)
