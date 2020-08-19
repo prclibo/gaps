@@ -2,17 +2,19 @@ opt = default_options();
 opt.M2_path = '/Users/li/workspace/Macaulay2-1.13/bin/M2';
 opt.optimize_coefficients = true;
 opt.remove_extra_columns = false;
-opt.find_upper_trianglar = true;
+opt.find_upper_trianglar = false;
 % opt.sparse_template = true;
-opt.cg_language = 'cpp';
-opt.eigen_solver = 'eigs_only';
-% opt.eigen_solver = 'sturm';
+% opt.cg_language = 'cpp';
+% opt.eigen_solver = 'eigs_only';
+opt.eigen_solver = 'default';
+opt.use_sym = false;
 opt.cg_eigen_dir = '/usr/local/include/eigen3';
 
 % opt.find_upper_trianglar = false;
 
-prob_fn = @prob_pc_relpose_4pra_t2d;
 prob_fn = @prob_pc_relpose_4pra_sir2__example;
+prob_fn = @prob_pc_relpose_3prast0_sir2__example;
+% prob_fn = @prob_pc_relpose_5p_sir2;
 [solv, opt] = generate_solver(prob_fn, opt);
 % return;
 addpath solvers

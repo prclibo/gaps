@@ -24,7 +24,7 @@ v = [v1; v2; v3];
 t = normc(rand([3, 1]));
 
 if any(strcmpi(parser.Results.ZeroScrewTransl, {'inner', 'outer'}))
-    error('Not implemented yet');
+%     error('Not implemented yet');
     t = skew(u) * t;
 end
 

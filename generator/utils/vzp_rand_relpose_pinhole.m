@@ -24,7 +24,7 @@ v = [v1; v2; v3];
 t = zp_rand_unit(3, p);
 
 if any(strcmpi(parser.Results.ZeroScrewTransl, {'inner', 'outer'}))
-    error('Not implemented yet');
+%     error('Not implemented yet');
     t = skew(u) * t; t = mod(t, p);
 end
 
