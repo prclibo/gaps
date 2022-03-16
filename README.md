@@ -55,10 +55,10 @@ classdef prob_pc_relpose_5p_nulle_ne__simple < problem
     % estimation problem solver.
     methods
         function [in, out] = gen_arg_subs(obj)
-            % Each field in `in_subs/out_subs` will become an input/output
+            % Each field in `in/out` will become an input/output
             % argument in the generated solver.
             %
-            % `in_subs.NE` is a 4x3x3 matrix made up of NEijk symbols. The
+            % `in.NE` is a 4x3x3 matrix made up of NEijk symbols. The
             % created solver will expect input argument NE to be 4x3x3
             % matrix and fill its element values to NEijk respectively.
             %
